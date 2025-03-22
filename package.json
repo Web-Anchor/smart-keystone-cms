@@ -1,0 +1,23 @@
+{
+  "name": "smart-keystone-cms",
+  "version": "1.0.3",
+  "private": true,
+  "scripts": {
+    "dev": "keystone dev",
+    "commit": "./commit.sh",
+    "build": "keystone build",
+    "db:reset": "npx prisma db push --force-reset",
+    "db:migrate": "keystone prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "start": "keystone start",
+    "start:new": "keystone start --with-migrations",
+    "lint": "eslint . --ext .ts,.tsx",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@keystone-6/auth": "^8.0.0",
+    "@keystone-6/core": "^6.0.0",
+    "@keystone-6/fields-document": "^9.0.0",
+    "typescript": "^5.5.0"
+  }
+}
