@@ -29,7 +29,10 @@ export default withAuth(
     graphql: {
       // Enable both playground and introspection even in production
       path: '/playground',
-      playground: true, // Enable GraphQL Playground via environment variable
+      playground: process.env.ENVIRONMENT === 'development', // Enable GraphQL Playground via environment variable
+      apolloConfig: {
+        introspection: true, // Enable introspection via environment variable
+      },
     },
   })
 );
