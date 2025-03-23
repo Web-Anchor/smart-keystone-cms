@@ -27,8 +27,7 @@ export default withAuth(
     lists,
     session,
     graphql: {
-      // Enable both playground and introspection even in production
-      path: '/playground',
+      path: '/api/graphql', // The path to the GraphQL API
       playground: process.env.ENVIRONMENT === 'development', // Enable GraphQL Playground via environment variable
       apolloConfig: {
         introspection: true, // Enable introspection via environment variable
