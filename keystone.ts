@@ -26,5 +26,10 @@ export default withAuth(
     },
     lists,
     session,
+    graphql: {
+      // Enable both playground and introspection even in production
+      path: '/playground',
+      playground: true, // Enable GraphQL Playground via environment variable
+    },
   })
 );
