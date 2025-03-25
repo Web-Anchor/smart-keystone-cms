@@ -5,17 +5,26 @@ type User {
   id: ID!
   firstName: String
   lastName: String
-  phoneNumbers: String
-  clerkId: String
   email: String
-  role: String
   password: PasswordState
-  permissions: String
-  configuration: JSON
-  tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
-  tagsCount(where: TagWhereInput! = {}): Int
-  updatedAt: DateTime
+  avatar: String
+  role: String
+  isActive: Boolean
   createdAt: DateTime
+  teams(where: TeamWhereInput! = {}, orderBy: [TeamOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TeamWhereUniqueInput): [Team!]
+  teamsCount(where: TeamWhereInput! = {}): Int
+  managedTeams(where: TeamWhereInput! = {}, orderBy: [TeamOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TeamWhereUniqueInput): [Team!]
+  managedTeamsCount(where: TeamWhereInput! = {}): Int
+  products(where: ProductWhereInput! = {}, orderBy: [ProductOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProductWhereUniqueInput): [Product!]
+  productsCount(where: ProductWhereInput! = {}): Int
+  materials(where: MaterialWhereInput! = {}, orderBy: [MaterialOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: MaterialWhereUniqueInput): [Material!]
+  materialsCount(where: MaterialWhereInput! = {}): Int
+  orders(where: OrderWhereInput! = {}, orderBy: [OrderOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: OrderWhereUniqueInput): [Order!]
+  ordersCount(where: OrderWhereInput! = {}): Int
+  retailLocations(where: RetailLocationWhereInput! = {}, orderBy: [RetailLocationOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: RetailLocationWhereUniqueInput): [RetailLocation!]
+  retailLocationsCount(where: RetailLocationWhereInput! = {}): Int
+  warehouseLocations(where: WarehouseLocationWhereInput! = {}, orderBy: [WarehouseLocationOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: WarehouseLocationWhereUniqueInput): [WarehouseLocation!]
+  warehouseLocationsCount(where: WarehouseLocationWhereInput! = {}): Int
 }
 
 type PasswordState {
@@ -26,7 +35,6 @@ scalar DateTime @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339
 
 input UserWhereUniqueInput {
   id: ID
-  clerkId: String
   email: String
 }
 
@@ -37,14 +45,18 @@ input UserWhereInput {
   id: IDFilter
   firstName: StringFilter
   lastName: StringFilter
-  phoneNumbers: StringFilter
-  clerkId: StringFilter
   email: StringFilter
+  avatar: StringFilter
   role: StringNullableFilter
-  permissions: StringNullableFilter
-  tags: TagManyRelationFilter
-  updatedAt: DateTimeNullableFilter
+  isActive: BooleanFilter
   createdAt: DateTimeNullableFilter
+  teams: TeamManyRelationFilter
+  managedTeams: TeamManyRelationFilter
+  products: ProductManyRelationFilter
+  materials: MaterialManyRelationFilter
+  orders: OrderManyRelationFilter
+  retailLocations: RetailLocationManyRelationFilter
+  warehouseLocations: WarehouseLocationManyRelationFilter
 }
 
 input IDFilter {
@@ -100,10 +112,9 @@ input StringNullableFilter {
   not: StringNullableFilter
 }
 
-input TagManyRelationFilter {
-  every: TagWhereInput
-  some: TagWhereInput
-  none: TagWhereInput
+input BooleanFilter {
+  equals: Boolean
+  not: BooleanFilter
 }
 
 input DateTimeNullableFilter {
@@ -117,16 +128,50 @@ input DateTimeNullableFilter {
   not: DateTimeNullableFilter
 }
 
+input TeamManyRelationFilter {
+  every: TeamWhereInput
+  some: TeamWhereInput
+  none: TeamWhereInput
+}
+
+input ProductManyRelationFilter {
+  every: ProductWhereInput
+  some: ProductWhereInput
+  none: ProductWhereInput
+}
+
+input MaterialManyRelationFilter {
+  every: MaterialWhereInput
+  some: MaterialWhereInput
+  none: MaterialWhereInput
+}
+
+input OrderManyRelationFilter {
+  every: OrderWhereInput
+  some: OrderWhereInput
+  none: OrderWhereInput
+}
+
+input RetailLocationManyRelationFilter {
+  every: RetailLocationWhereInput
+  some: RetailLocationWhereInput
+  none: RetailLocationWhereInput
+}
+
+input WarehouseLocationManyRelationFilter {
+  every: WarehouseLocationWhereInput
+  some: WarehouseLocationWhereInput
+  none: WarehouseLocationWhereInput
+}
+
 input UserOrderByInput {
   id: OrderDirection
   firstName: OrderDirection
   lastName: OrderDirection
-  phoneNumbers: OrderDirection
-  clerkId: OrderDirection
   email: OrderDirection
+  avatar: OrderDirection
   role: OrderDirection
-  permissions: OrderDirection
-  updatedAt: OrderDirection
+  isActive: OrderDirection
   createdAt: OrderDirection
 }
 
@@ -138,23 +183,61 @@ enum OrderDirection {
 input UserUpdateInput {
   firstName: String
   lastName: String
-  phoneNumbers: String
-  clerkId: String
   email: String
-  role: String
   password: String
-  permissions: String
-  configuration: JSON
-  tags: TagRelateToManyForUpdateInput
-  updatedAt: DateTime
+  avatar: String
+  role: String
+  isActive: Boolean
   createdAt: DateTime
+  teams: TeamRelateToManyForUpdateInput
+  managedTeams: TeamRelateToManyForUpdateInput
+  products: ProductRelateToManyForUpdateInput
+  materials: MaterialRelateToManyForUpdateInput
+  orders: OrderRelateToManyForUpdateInput
+  retailLocations: RetailLocationRelateToManyForUpdateInput
+  warehouseLocations: WarehouseLocationRelateToManyForUpdateInput
 }
 
-input TagRelateToManyForUpdateInput {
-  disconnect: [TagWhereUniqueInput!]
-  set: [TagWhereUniqueInput!]
-  create: [TagCreateInput!]
-  connect: [TagWhereUniqueInput!]
+input TeamRelateToManyForUpdateInput {
+  disconnect: [TeamWhereUniqueInput!]
+  set: [TeamWhereUniqueInput!]
+  create: [TeamCreateInput!]
+  connect: [TeamWhereUniqueInput!]
+}
+
+input ProductRelateToManyForUpdateInput {
+  disconnect: [ProductWhereUniqueInput!]
+  set: [ProductWhereUniqueInput!]
+  create: [ProductCreateInput!]
+  connect: [ProductWhereUniqueInput!]
+}
+
+input MaterialRelateToManyForUpdateInput {
+  disconnect: [MaterialWhereUniqueInput!]
+  set: [MaterialWhereUniqueInput!]
+  create: [MaterialCreateInput!]
+  connect: [MaterialWhereUniqueInput!]
+}
+
+input OrderRelateToManyForUpdateInput {
+  disconnect: [OrderWhereUniqueInput!]
+  set: [OrderWhereUniqueInput!]
+  create: [OrderCreateInput!]
+  connect: [OrderWhereUniqueInput!]
+}
+
+input RetailLocationRelateToManyForUpdateInput {
+  disconnect: [RetailLocationWhereUniqueInput!]
+  set: [RetailLocationWhereUniqueInput!]
+  create: [RetailLocationCreateInput!]
+  connect: [RetailLocationWhereUniqueInput!]
+}
+
+input WarehouseLocationRelateToManyForUpdateInput {
+  disconnect: [WarehouseLocationWhereUniqueInput!]
+  set: [WarehouseLocationWhereUniqueInput!]
+  create: [WarehouseLocationCreateInput!]
+  connect: [WarehouseLocationWhereUniqueInput!]
 }
 
 input UserUpdateArgs {
@@ -165,50 +248,75 @@ input UserUpdateArgs {
 input UserCreateInput {
   firstName: String
   lastName: String
-  phoneNumbers: String
-  clerkId: String
   email: String
-  role: String
   password: String
-  permissions: String
-  configuration: JSON
-  tags: TagRelateToManyForCreateInput
-  updatedAt: DateTime
+  avatar: String
+  role: String
+  isActive: Boolean
   createdAt: DateTime
+  teams: TeamRelateToManyForCreateInput
+  managedTeams: TeamRelateToManyForCreateInput
+  products: ProductRelateToManyForCreateInput
+  materials: MaterialRelateToManyForCreateInput
+  orders: OrderRelateToManyForCreateInput
+  retailLocations: RetailLocationRelateToManyForCreateInput
+  warehouseLocations: WarehouseLocationRelateToManyForCreateInput
 }
 
-input TagRelateToManyForCreateInput {
-  create: [TagCreateInput!]
-  connect: [TagWhereUniqueInput!]
+input TeamRelateToManyForCreateInput {
+  create: [TeamCreateInput!]
+  connect: [TeamWhereUniqueInput!]
 }
 
-type Cluster {
+input ProductRelateToManyForCreateInput {
+  create: [ProductCreateInput!]
+  connect: [ProductWhereUniqueInput!]
+}
+
+input MaterialRelateToManyForCreateInput {
+  create: [MaterialCreateInput!]
+  connect: [MaterialWhereUniqueInput!]
+}
+
+input OrderRelateToManyForCreateInput {
+  create: [OrderCreateInput!]
+  connect: [OrderWhereUniqueInput!]
+}
+
+input RetailLocationRelateToManyForCreateInput {
+  create: [RetailLocationCreateInput!]
+  connect: [RetailLocationWhereUniqueInput!]
+}
+
+input WarehouseLocationRelateToManyForCreateInput {
+  create: [WarehouseLocationCreateInput!]
+  connect: [WarehouseLocationWhereUniqueInput!]
+}
+
+type Team {
   id: ID!
   name: String
   description: String
-  users(where: UserWhereInput! = {}, orderBy: [UserOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UserWhereUniqueInput): [User!]
-  usersCount(where: UserWhereInput! = {}): Int
-  lists(where: ListWhereInput! = {}, orderBy: [ListOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ListWhereUniqueInput): [List!]
-  listsCount(where: ListWhereInput! = {}): Int
+  members(where: UserWhereInput! = {}, orderBy: [UserOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UserWhereUniqueInput): [User!]
+  membersCount(where: UserWhereInput! = {}): Int
+  manager: User
   createdAt: DateTime
-  updatedAt: DateTime
 }
 
-input ClusterWhereUniqueInput {
+input TeamWhereUniqueInput {
   id: ID
 }
 
-input ClusterWhereInput {
-  AND: [ClusterWhereInput!]
-  OR: [ClusterWhereInput!]
-  NOT: [ClusterWhereInput!]
+input TeamWhereInput {
+  AND: [TeamWhereInput!]
+  OR: [TeamWhereInput!]
+  NOT: [TeamWhereInput!]
   id: IDFilter
   name: StringFilter
   description: StringFilter
-  users: UserManyRelationFilter
-  lists: ListManyRelationFilter
+  members: UserManyRelationFilter
+  manager: UserWhereInput
   createdAt: DateTimeNullableFilter
-  updatedAt: DateTimeNullableFilter
 }
 
 input UserManyRelationFilter {
@@ -217,27 +325,19 @@ input UserManyRelationFilter {
   none: UserWhereInput
 }
 
-input ListManyRelationFilter {
-  every: ListWhereInput
-  some: ListWhereInput
-  none: ListWhereInput
-}
-
-input ClusterOrderByInput {
+input TeamOrderByInput {
   id: OrderDirection
   name: OrderDirection
   description: OrderDirection
   createdAt: OrderDirection
-  updatedAt: OrderDirection
 }
 
-input ClusterUpdateInput {
+input TeamUpdateInput {
   name: String
   description: String
-  users: UserRelateToManyForUpdateInput
-  lists: ListRelateToManyForUpdateInput
+  members: UserRelateToManyForUpdateInput
+  manager: UserRelateToOneForUpdateInput
   createdAt: DateTime
-  updatedAt: DateTime
 }
 
 input UserRelateToManyForUpdateInput {
@@ -247,25 +347,23 @@ input UserRelateToManyForUpdateInput {
   connect: [UserWhereUniqueInput!]
 }
 
-input ListRelateToManyForUpdateInput {
-  disconnect: [ListWhereUniqueInput!]
-  set: [ListWhereUniqueInput!]
-  create: [ListCreateInput!]
-  connect: [ListWhereUniqueInput!]
+input UserRelateToOneForUpdateInput {
+  create: UserCreateInput
+  connect: UserWhereUniqueInput
+  disconnect: Boolean
 }
 
-input ClusterUpdateArgs {
-  where: ClusterWhereUniqueInput!
-  data: ClusterUpdateInput!
+input TeamUpdateArgs {
+  where: TeamWhereUniqueInput!
+  data: TeamUpdateInput!
 }
 
-input ClusterCreateInput {
+input TeamCreateInput {
   name: String
   description: String
-  users: UserRelateToManyForCreateInput
-  lists: ListRelateToManyForCreateInput
+  members: UserRelateToManyForCreateInput
+  manager: UserRelateToOneForCreateInput
   createdAt: DateTime
-  updatedAt: DateTime
 }
 
 input UserRelateToManyForCreateInput {
@@ -273,171 +371,55 @@ input UserRelateToManyForCreateInput {
   connect: [UserWhereUniqueInput!]
 }
 
-input ListRelateToManyForCreateInput {
-  create: [ListCreateInput!]
-  connect: [ListWhereUniqueInput!]
-}
-
-type List {
-  id: ID!
-  name: String
-  description: String
-  tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
-  tagsCount(where: TagWhereInput! = {}): Int
-  clusters(where: ClusterWhereInput! = {}, orderBy: [ClusterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ClusterWhereUniqueInput): [Cluster!]
-  clustersCount(where: ClusterWhereInput! = {}): Int
-  users(where: UserWhereInput! = {}, orderBy: [UserOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UserWhereUniqueInput): [User!]
-  usersCount(where: UserWhereInput! = {}): Int
-  products(where: ProductWhereInput! = {}, orderBy: [ProductOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProductWhereUniqueInput): [Product!]
-  productsCount(where: ProductWhereInput! = {}): Int
-  items(where: InventoryWhereInput! = {}, orderBy: [InventoryOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InventoryWhereUniqueInput): [Inventory!]
-  itemsCount(where: InventoryWhereInput! = {}): Int
-  createdAt: DateTime
-  updatedAt: DateTime
-}
-
-input ListWhereUniqueInput {
-  id: ID
-}
-
-input ListWhereInput {
-  AND: [ListWhereInput!]
-  OR: [ListWhereInput!]
-  NOT: [ListWhereInput!]
-  id: IDFilter
-  name: StringFilter
-  description: StringFilter
-  tags: TagManyRelationFilter
-  clusters: ClusterManyRelationFilter
-  users: UserManyRelationFilter
-  products: ProductManyRelationFilter
-  items: InventoryManyRelationFilter
-  createdAt: DateTimeNullableFilter
-  updatedAt: DateTimeNullableFilter
-}
-
-input ClusterManyRelationFilter {
-  every: ClusterWhereInput
-  some: ClusterWhereInput
-  none: ClusterWhereInput
-}
-
-input ProductManyRelationFilter {
-  every: ProductWhereInput
-  some: ProductWhereInput
-  none: ProductWhereInput
-}
-
-input InventoryManyRelationFilter {
-  every: InventoryWhereInput
-  some: InventoryWhereInput
-  none: InventoryWhereInput
-}
-
-input ListOrderByInput {
-  id: OrderDirection
-  name: OrderDirection
-  description: OrderDirection
-  createdAt: OrderDirection
-  updatedAt: OrderDirection
-}
-
-input ListUpdateInput {
-  name: String
-  description: String
-  tags: TagRelateToManyForUpdateInput
-  clusters: ClusterRelateToManyForUpdateInput
-  users: UserRelateToManyForUpdateInput
-  products: ProductRelateToManyForUpdateInput
-  items: InventoryRelateToManyForUpdateInput
-  createdAt: DateTime
-  updatedAt: DateTime
-}
-
-input ClusterRelateToManyForUpdateInput {
-  disconnect: [ClusterWhereUniqueInput!]
-  set: [ClusterWhereUniqueInput!]
-  create: [ClusterCreateInput!]
-  connect: [ClusterWhereUniqueInput!]
-}
-
-input ProductRelateToManyForUpdateInput {
-  disconnect: [ProductWhereUniqueInput!]
-  set: [ProductWhereUniqueInput!]
-  create: [ProductCreateInput!]
-  connect: [ProductWhereUniqueInput!]
-}
-
-input InventoryRelateToManyForUpdateInput {
-  disconnect: [InventoryWhereUniqueInput!]
-  set: [InventoryWhereUniqueInput!]
-  create: [InventoryCreateInput!]
-  connect: [InventoryWhereUniqueInput!]
-}
-
-input ListUpdateArgs {
-  where: ListWhereUniqueInput!
-  data: ListUpdateInput!
-}
-
-input ListCreateInput {
-  name: String
-  description: String
-  tags: TagRelateToManyForCreateInput
-  clusters: ClusterRelateToManyForCreateInput
-  users: UserRelateToManyForCreateInput
-  products: ProductRelateToManyForCreateInput
-  items: InventoryRelateToManyForCreateInput
-  createdAt: DateTime
-  updatedAt: DateTime
-}
-
-input ClusterRelateToManyForCreateInput {
-  create: [ClusterCreateInput!]
-  connect: [ClusterWhereUniqueInput!]
-}
-
-input ProductRelateToManyForCreateInput {
-  create: [ProductCreateInput!]
-  connect: [ProductWhereUniqueInput!]
-}
-
-input InventoryRelateToManyForCreateInput {
-  create: [InventoryCreateInput!]
-  connect: [InventoryWhereUniqueInput!]
+input UserRelateToOneForCreateInput {
+  create: UserCreateInput
+  connect: UserWhereUniqueInput
 }
 
 type Product {
   id: ID!
   name: String
-  description: String
-  category: String
+  description: Product_description_Document
   sku: String
   barcode: String
-  attributes: JSON
-  isComposite: Boolean
-  cost: Float
-  price: Float
-  taxRate: Float
-  reorderLevel: Int
-  unit: String
-  quantity: Int
-  supplier: String
-  leadTime: Int
-  status: String
-  isHidden: Boolean
-  users(where: UserWhereInput! = {}, orderBy: [UserOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UserWhereUniqueInput): [User!]
-  usersCount(where: UserWhereInput! = {}): Int
+  price: Int
+  cost: Int
+  weight: Float
+  dimensions: JSON
+  status: ProductStatusType
+  inventoryItems(where: InventoryItemWhereInput! = {}, orderBy: [InventoryItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InventoryItemWhereUniqueInput): [InventoryItem!]
+  inventoryItemsCount(where: InventoryItemWhereInput! = {}): Int
+  images(where: ProductImageWhereInput! = {}, orderBy: [ProductImageOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProductImageWhereUniqueInput): [ProductImage!]
+  imagesCount(where: ProductImageWhereInput! = {}): Int
+  categories(where: CategoryWhereInput! = {}, orderBy: [CategoryOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: CategoryWhereUniqueInput): [Category!]
+  categoriesCount(where: CategoryWhereInput! = {}): Int
   tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
   tagsCount(where: TagWhereInput! = {}): Int
-  boms(where: BOMWhereInput! = {}, orderBy: [BOMOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: BOMWhereUniqueInput): [BOM!]
-  bomsCount(where: BOMWhereInput! = {}): Int
+  variants(where: ProductVariantWhereInput! = {}, orderBy: [ProductVariantOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProductVariantWhereUniqueInput): [ProductVariant!]
+  variantsCount(where: ProductVariantWhereInput! = {}): Int
+  materials(where: BillOfMaterialWhereInput! = {}, orderBy: [BillOfMaterialOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: BillOfMaterialWhereUniqueInput): [BillOfMaterial!]
+  materialsCount(where: BillOfMaterialWhereInput! = {}): Int
+  createdBy: User
   createdAt: DateTime
   updatedAt: DateTime
+  orderItems(where: OrderItemWhereInput! = {}, orderBy: [OrderItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: OrderItemWhereUniqueInput): [OrderItem!]
+  orderItemsCount(where: OrderItemWhereInput! = {}): Int
+}
+
+type Product_description_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+enum ProductStatusType {
+  active
+  draft
+  archived
 }
 
 input ProductWhereUniqueInput {
   id: ID
+  sku: String
+  barcode: String
 }
 
 input ProductWhereInput {
@@ -446,636 +428,22 @@ input ProductWhereInput {
   NOT: [ProductWhereInput!]
   id: IDFilter
   name: StringFilter
-  description: StringFilter
-  category: StringFilter
   sku: StringFilter
   barcode: StringFilter
-  isComposite: BooleanFilter
-  cost: FloatNullableFilter
-  price: FloatNullableFilter
-  taxRate: FloatNullableFilter
-  reorderLevel: IntNullableFilter
-  unit: StringFilter
-  quantity: IntNullableFilter
-  supplier: StringFilter
-  leadTime: IntNullableFilter
-  status: StringNullableFilter
-  isHidden: BooleanFilter
-  users: UserManyRelationFilter
+  price: IntFilter
+  cost: IntNullableFilter
+  weight: FloatNullableFilter
+  status: ProductStatusTypeNullableFilter
+  inventoryItems: InventoryItemManyRelationFilter
+  images: ProductImageManyRelationFilter
+  categories: CategoryManyRelationFilter
   tags: TagManyRelationFilter
-  boms: BOMManyRelationFilter
+  variants: ProductVariantManyRelationFilter
+  materials: BillOfMaterialManyRelationFilter
+  createdBy: UserWhereInput
   createdAt: DateTimeNullableFilter
   updatedAt: DateTimeNullableFilter
-}
-
-input BooleanFilter {
-  equals: Boolean
-  not: BooleanFilter
-}
-
-input FloatNullableFilter {
-  equals: Float
-  in: [Float!]
-  notIn: [Float!]
-  lt: Float
-  lte: Float
-  gt: Float
-  gte: Float
-  not: FloatNullableFilter
-}
-
-input IntNullableFilter {
-  equals: Int
-  in: [Int!]
-  notIn: [Int!]
-  lt: Int
-  lte: Int
-  gt: Int
-  gte: Int
-  not: IntNullableFilter
-}
-
-input BOMManyRelationFilter {
-  every: BOMWhereInput
-  some: BOMWhereInput
-  none: BOMWhereInput
-}
-
-input ProductOrderByInput {
-  id: OrderDirection
-  name: OrderDirection
-  description: OrderDirection
-  category: OrderDirection
-  sku: OrderDirection
-  barcode: OrderDirection
-  isComposite: OrderDirection
-  cost: OrderDirection
-  price: OrderDirection
-  taxRate: OrderDirection
-  reorderLevel: OrderDirection
-  unit: OrderDirection
-  quantity: OrderDirection
-  supplier: OrderDirection
-  leadTime: OrderDirection
-  status: OrderDirection
-  isHidden: OrderDirection
-  createdAt: OrderDirection
-  updatedAt: OrderDirection
-}
-
-input ProductUpdateInput {
-  name: String
-  description: String
-  category: String
-  sku: String
-  barcode: String
-  attributes: JSON
-  isComposite: Boolean
-  cost: Float
-  price: Float
-  taxRate: Float
-  reorderLevel: Int
-  unit: String
-  quantity: Int
-  supplier: String
-  leadTime: Int
-  status: String
-  isHidden: Boolean
-  users: UserRelateToManyForUpdateInput
-  tags: TagRelateToManyForUpdateInput
-  boms: BOMRelateToManyForUpdateInput
-  createdAt: DateTime
-  updatedAt: DateTime
-}
-
-input BOMRelateToManyForUpdateInput {
-  disconnect: [BOMWhereUniqueInput!]
-  set: [BOMWhereUniqueInput!]
-  create: [BOMCreateInput!]
-  connect: [BOMWhereUniqueInput!]
-}
-
-input ProductUpdateArgs {
-  where: ProductWhereUniqueInput!
-  data: ProductUpdateInput!
-}
-
-input ProductCreateInput {
-  name: String
-  description: String
-  category: String
-  sku: String
-  barcode: String
-  attributes: JSON
-  isComposite: Boolean
-  cost: Float
-  price: Float
-  taxRate: Float
-  reorderLevel: Int
-  unit: String
-  quantity: Int
-  supplier: String
-  leadTime: Int
-  status: String
-  isHidden: Boolean
-  users: UserRelateToManyForCreateInput
-  tags: TagRelateToManyForCreateInput
-  boms: BOMRelateToManyForCreateInput
-  createdAt: DateTime
-  updatedAt: DateTime
-}
-
-input BOMRelateToManyForCreateInput {
-  create: [BOMCreateInput!]
-  connect: [BOMWhereUniqueInput!]
-}
-
-type Inventory {
-  id: ID!
-  name: String
-  description: String
-  batchNumber: String
-  sku: String
-  quantity: Int
-  unit: String
-  location: String
-  expiryDate: DateTime
-  receivedDate: DateTime
-  category: String
-  attributes: JSON
-  purchasePrice: Float
-  salePrice: Float
-  price: Float
-  cost: Float
-  status: String
-  supplier: String
-  isReserved: Boolean
-  isDamaged: Boolean
-  users(where: UserWhereInput! = {}, orderBy: [UserOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UserWhereUniqueInput): [User!]
-  usersCount(where: UserWhereInput! = {}): Int
-  tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
-  tagsCount(where: TagWhereInput! = {}): Int
-  bom(where: BOMWhereInput! = {}, orderBy: [BOMOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: BOMWhereUniqueInput): [BOM!]
-  bomCount(where: BOMWhereInput! = {}): Int
-  createdAt: DateTime
-  updatedAt: DateTime
-}
-
-input InventoryWhereUniqueInput {
-  id: ID
-  sku: String
-}
-
-input InventoryWhereInput {
-  AND: [InventoryWhereInput!]
-  OR: [InventoryWhereInput!]
-  NOT: [InventoryWhereInput!]
-  id: IDFilter
-  name: StringFilter
-  description: StringFilter
-  batchNumber: StringFilter
-  sku: StringFilter
-  quantity: IntNullableFilter
-  unit: StringFilter
-  location: StringFilter
-  expiryDate: DateTimeNullableFilter
-  receivedDate: DateTimeNullableFilter
-  category: StringFilter
-  purchasePrice: FloatNullableFilter
-  salePrice: FloatNullableFilter
-  price: FloatNullableFilter
-  cost: FloatNullableFilter
-  status: StringNullableFilter
-  supplier: StringFilter
-  isReserved: BooleanFilter
-  isDamaged: BooleanFilter
-  users: UserManyRelationFilter
-  tags: TagManyRelationFilter
-  bom: BOMManyRelationFilter
-  createdAt: DateTimeNullableFilter
-  updatedAt: DateTimeNullableFilter
-}
-
-input InventoryOrderByInput {
-  id: OrderDirection
-  name: OrderDirection
-  description: OrderDirection
-  batchNumber: OrderDirection
-  sku: OrderDirection
-  quantity: OrderDirection
-  unit: OrderDirection
-  location: OrderDirection
-  expiryDate: OrderDirection
-  receivedDate: OrderDirection
-  category: OrderDirection
-  purchasePrice: OrderDirection
-  salePrice: OrderDirection
-  price: OrderDirection
-  cost: OrderDirection
-  status: OrderDirection
-  supplier: OrderDirection
-  isReserved: OrderDirection
-  isDamaged: OrderDirection
-  createdAt: OrderDirection
-  updatedAt: OrderDirection
-}
-
-input InventoryUpdateInput {
-  name: String
-  description: String
-  batchNumber: String
-  sku: String
-  quantity: Int
-  unit: String
-  location: String
-  expiryDate: DateTime
-  receivedDate: DateTime
-  category: String
-  attributes: JSON
-  purchasePrice: Float
-  salePrice: Float
-  price: Float
-  cost: Float
-  status: String
-  supplier: String
-  isReserved: Boolean
-  isDamaged: Boolean
-  users: UserRelateToManyForUpdateInput
-  tags: TagRelateToManyForUpdateInput
-  bom: BOMRelateToManyForUpdateInput
-  createdAt: DateTime
-  updatedAt: DateTime
-}
-
-input InventoryUpdateArgs {
-  where: InventoryWhereUniqueInput!
-  data: InventoryUpdateInput!
-}
-
-input InventoryCreateInput {
-  name: String
-  description: String
-  batchNumber: String
-  sku: String
-  quantity: Int
-  unit: String
-  location: String
-  expiryDate: DateTime
-  receivedDate: DateTime
-  category: String
-  attributes: JSON
-  purchasePrice: Float
-  salePrice: Float
-  price: Float
-  cost: Float
-  status: String
-  supplier: String
-  isReserved: Boolean
-  isDamaged: Boolean
-  users: UserRelateToManyForCreateInput
-  tags: TagRelateToManyForCreateInput
-  bom: BOMRelateToManyForCreateInput
-  createdAt: DateTime
-  updatedAt: DateTime
-}
-
-type Invitation {
-  id: ID!
-  email: String
-  status: String
-  token: String
-  lists(where: ListWhereInput! = {}, orderBy: [ListOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ListWhereUniqueInput): [List!]
-  listsCount(where: ListWhereInput! = {}): Int
-  clusters(where: ClusterWhereInput! = {}, orderBy: [ClusterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ClusterWhereUniqueInput): [Cluster!]
-  clustersCount(where: ClusterWhereInput! = {}): Int
-  user: User
-  createdAt: DateTime
-  updatedAt: DateTime
-}
-
-input InvitationWhereUniqueInput {
-  id: ID
-  token: String
-}
-
-input InvitationWhereInput {
-  AND: [InvitationWhereInput!]
-  OR: [InvitationWhereInput!]
-  NOT: [InvitationWhereInput!]
-  id: IDFilter
-  email: StringFilter
-  status: StringNullableFilter
-  token: StringFilter
-  lists: ListManyRelationFilter
-  clusters: ClusterManyRelationFilter
-  user: UserWhereInput
-  createdAt: DateTimeNullableFilter
-  updatedAt: DateTimeNullableFilter
-}
-
-input InvitationOrderByInput {
-  id: OrderDirection
-  email: OrderDirection
-  status: OrderDirection
-  token: OrderDirection
-  createdAt: OrderDirection
-  updatedAt: OrderDirection
-}
-
-input InvitationUpdateInput {
-  email: String
-  status: String
-  token: String
-  lists: ListRelateToManyForUpdateInput
-  clusters: ClusterRelateToManyForUpdateInput
-  user: UserRelateToOneForUpdateInput
-  createdAt: DateTime
-  updatedAt: DateTime
-}
-
-input UserRelateToOneForUpdateInput {
-  create: UserCreateInput
-  connect: UserWhereUniqueInput
-  disconnect: Boolean
-}
-
-input InvitationUpdateArgs {
-  where: InvitationWhereUniqueInput!
-  data: InvitationUpdateInput!
-}
-
-input InvitationCreateInput {
-  email: String
-  status: String
-  token: String
-  lists: ListRelateToManyForCreateInput
-  clusters: ClusterRelateToManyForCreateInput
-  user: UserRelateToOneForCreateInput
-  createdAt: DateTime
-  updatedAt: DateTime
-}
-
-input UserRelateToOneForCreateInput {
-  create: UserCreateInput
-  connect: UserWhereUniqueInput
-}
-
-type Order {
-  id: ID!
-  orderNumber: String
-  status: String
-  users(where: UserWhereInput! = {}, orderBy: [UserOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UserWhereUniqueInput): [User!]
-  usersCount(where: UserWhereInput! = {}): Int
-  products(where: ProductWhereInput! = {}, orderBy: [ProductOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProductWhereUniqueInput): [Product!]
-  productsCount(where: ProductWhereInput! = {}): Int
-  inventory(where: InventoryWhereInput! = {}, orderBy: [InventoryOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InventoryWhereUniqueInput): [Inventory!]
-  inventoryCount(where: InventoryWhereInput! = {}): Int
-  source: String
-  quantity: Int
-  price: Int
-  taxRate: Int
-  unit: String
-  currency: String
-  createdAt: DateTime
-  updatedAt: DateTime
-}
-
-input OrderWhereUniqueInput {
-  id: ID
-}
-
-input OrderWhereInput {
-  AND: [OrderWhereInput!]
-  OR: [OrderWhereInput!]
-  NOT: [OrderWhereInput!]
-  id: IDFilter
-  orderNumber: StringFilter
-  status: StringNullableFilter
-  users: UserManyRelationFilter
-  products: ProductManyRelationFilter
-  inventory: InventoryManyRelationFilter
-  source: StringFilter
-  quantity: IntNullableFilter
-  price: IntNullableFilter
-  taxRate: IntNullableFilter
-  unit: StringFilter
-  currency: StringFilter
-  createdAt: DateTimeNullableFilter
-  updatedAt: DateTimeNullableFilter
-}
-
-input OrderOrderByInput {
-  id: OrderDirection
-  orderNumber: OrderDirection
-  status: OrderDirection
-  source: OrderDirection
-  quantity: OrderDirection
-  price: OrderDirection
-  taxRate: OrderDirection
-  unit: OrderDirection
-  currency: OrderDirection
-  createdAt: OrderDirection
-  updatedAt: OrderDirection
-}
-
-input OrderUpdateInput {
-  orderNumber: String
-  status: String
-  users: UserRelateToManyForUpdateInput
-  products: ProductRelateToManyForUpdateInput
-  inventory: InventoryRelateToManyForUpdateInput
-  source: String
-  quantity: Int
-  price: Int
-  taxRate: Int
-  unit: String
-  currency: String
-  createdAt: DateTime
-  updatedAt: DateTime
-}
-
-input OrderUpdateArgs {
-  where: OrderWhereUniqueInput!
-  data: OrderUpdateInput!
-}
-
-input OrderCreateInput {
-  orderNumber: String
-  status: String
-  users: UserRelateToManyForCreateInput
-  products: ProductRelateToManyForCreateInput
-  inventory: InventoryRelateToManyForCreateInput
-  source: String
-  quantity: Int
-  price: Int
-  taxRate: Int
-  unit: String
-  currency: String
-  createdAt: DateTime
-  updatedAt: DateTime
-}
-
-type Integration {
-  id: ID!
-  user: User
-  integrationType: String
-  storeUrl: String
-  apiKey: String
-  shopId: String
-  status: String
-  createdAt: DateTime
-  updatedAt: DateTime
-}
-
-input IntegrationWhereUniqueInput {
-  id: ID
-}
-
-input IntegrationWhereInput {
-  AND: [IntegrationWhereInput!]
-  OR: [IntegrationWhereInput!]
-  NOT: [IntegrationWhereInput!]
-  id: IDFilter
-  user: UserWhereInput
-  integrationType: StringFilter
-  storeUrl: StringFilter
-  apiKey: StringFilter
-  shopId: StringFilter
-  status: StringNullableFilter
-  createdAt: DateTimeNullableFilter
-  updatedAt: DateTimeNullableFilter
-}
-
-input IntegrationOrderByInput {
-  id: OrderDirection
-  integrationType: OrderDirection
-  storeUrl: OrderDirection
-  apiKey: OrderDirection
-  shopId: OrderDirection
-  status: OrderDirection
-  createdAt: OrderDirection
-  updatedAt: OrderDirection
-}
-
-input IntegrationUpdateInput {
-  user: UserRelateToOneForUpdateInput
-  integrationType: String
-  storeUrl: String
-  apiKey: String
-  shopId: String
-  status: String
-  createdAt: DateTime
-  updatedAt: DateTime
-}
-
-input IntegrationUpdateArgs {
-  where: IntegrationWhereUniqueInput!
-  data: IntegrationUpdateInput!
-}
-
-input IntegrationCreateInput {
-  user: UserRelateToOneForCreateInput
-  integrationType: String
-  storeUrl: String
-  apiKey: String
-  shopId: String
-  status: String
-  createdAt: DateTime
-  updatedAt: DateTime
-}
-
-type Tag {
-  id: ID!
-  name: String
-  description: String
-  users(where: UserWhereInput! = {}, orderBy: [UserOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UserWhereUniqueInput): [User!]
-  usersCount(where: UserWhereInput! = {}): Int
-  lists(where: ListWhereInput! = {}, orderBy: [ListOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ListWhereUniqueInput): [List!]
-  listsCount(where: ListWhereInput! = {}): Int
-  products(where: ProductWhereInput! = {}, orderBy: [ProductOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProductWhereUniqueInput): [Product!]
-  productsCount(where: ProductWhereInput! = {}): Int
-  inventory(where: InventoryWhereInput! = {}, orderBy: [InventoryOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InventoryWhereUniqueInput): [Inventory!]
-  inventoryCount(where: InventoryWhereInput! = {}): Int
-}
-
-input TagWhereUniqueInput {
-  id: ID
-}
-
-input TagWhereInput {
-  AND: [TagWhereInput!]
-  OR: [TagWhereInput!]
-  NOT: [TagWhereInput!]
-  id: IDFilter
-  name: StringFilter
-  description: StringFilter
-  users: UserManyRelationFilter
-  lists: ListManyRelationFilter
-  products: ProductManyRelationFilter
-  inventory: InventoryManyRelationFilter
-}
-
-input TagOrderByInput {
-  id: OrderDirection
-  name: OrderDirection
-  description: OrderDirection
-}
-
-input TagUpdateInput {
-  name: String
-  description: String
-  users: UserRelateToManyForUpdateInput
-  lists: ListRelateToManyForUpdateInput
-  products: ProductRelateToManyForUpdateInput
-  inventory: InventoryRelateToManyForUpdateInput
-}
-
-input TagUpdateArgs {
-  where: TagWhereUniqueInput!
-  data: TagUpdateInput!
-}
-
-input TagCreateInput {
-  name: String
-  description: String
-  users: UserRelateToManyForCreateInput
-  lists: ListRelateToManyForCreateInput
-  products: ProductRelateToManyForCreateInput
-  inventory: InventoryRelateToManyForCreateInput
-}
-
-type BOM {
-  id: ID!
-  name: String
-  description: String
-  composite: Product
-  component: Inventory
-  users(where: UserWhereInput! = {}, orderBy: [UserOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UserWhereUniqueInput): [User!]
-  usersCount(where: UserWhereInput! = {}): Int
-  quantity: Int
-  unit: String
-  updatedAt: DateTime
-  createdAt: DateTime
-}
-
-input BOMWhereUniqueInput {
-  id: ID
-}
-
-input BOMWhereInput {
-  AND: [BOMWhereInput!]
-  OR: [BOMWhereInput!]
-  NOT: [BOMWhereInput!]
-  id: IDFilter
-  name: StringFilter
-  description: StringFilter
-  composite: ProductWhereInput
-  component: InventoryWhereInput
-  users: UserManyRelationFilter
-  quantity: IntFilter
-  unit: StringFilter
-  updatedAt: DateTimeNullableFilter
-  createdAt: DateTimeNullableFilter
+  orderItems: OrderItemManyRelationFilter
 }
 
 input IntFilter {
@@ -1089,26 +457,278 @@ input IntFilter {
   not: IntFilter
 }
 
-input BOMOrderByInput {
-  id: OrderDirection
-  name: OrderDirection
-  description: OrderDirection
-  quantity: OrderDirection
-  unit: OrderDirection
-  updatedAt: OrderDirection
-  createdAt: OrderDirection
+input IntNullableFilter {
+  equals: Int
+  in: [Int!]
+  notIn: [Int!]
+  lt: Int
+  lte: Int
+  gt: Int
+  gte: Int
+  not: IntNullableFilter
 }
 
-input BOMUpdateInput {
+input FloatNullableFilter {
+  equals: Float
+  in: [Float!]
+  notIn: [Float!]
+  lt: Float
+  lte: Float
+  gt: Float
+  gte: Float
+  not: FloatNullableFilter
+}
+
+input ProductStatusTypeNullableFilter {
+  equals: ProductStatusType
+  in: [ProductStatusType!]
+  notIn: [ProductStatusType!]
+  not: ProductStatusTypeNullableFilter
+}
+
+input InventoryItemManyRelationFilter {
+  every: InventoryItemWhereInput
+  some: InventoryItemWhereInput
+  none: InventoryItemWhereInput
+}
+
+input ProductImageManyRelationFilter {
+  every: ProductImageWhereInput
+  some: ProductImageWhereInput
+  none: ProductImageWhereInput
+}
+
+input CategoryManyRelationFilter {
+  every: CategoryWhereInput
+  some: CategoryWhereInput
+  none: CategoryWhereInput
+}
+
+input TagManyRelationFilter {
+  every: TagWhereInput
+  some: TagWhereInput
+  none: TagWhereInput
+}
+
+input ProductVariantManyRelationFilter {
+  every: ProductVariantWhereInput
+  some: ProductVariantWhereInput
+  none: ProductVariantWhereInput
+}
+
+input BillOfMaterialManyRelationFilter {
+  every: BillOfMaterialWhereInput
+  some: BillOfMaterialWhereInput
+  none: BillOfMaterialWhereInput
+}
+
+input OrderItemManyRelationFilter {
+  every: OrderItemWhereInput
+  some: OrderItemWhereInput
+  none: OrderItemWhereInput
+}
+
+input ProductOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  sku: OrderDirection
+  barcode: OrderDirection
+  price: OrderDirection
+  cost: OrderDirection
+  weight: OrderDirection
+  status: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input ProductUpdateInput {
   name: String
-  description: String
-  composite: ProductRelateToOneForUpdateInput
-  component: InventoryRelateToOneForUpdateInput
-  users: UserRelateToManyForUpdateInput
-  quantity: Int
-  unit: String
-  updatedAt: DateTime
+  description: JSON
+  sku: String
+  barcode: String
+  price: Int
+  cost: Int
+  weight: Float
+  dimensions: JSON
+  status: ProductStatusType
+  inventoryItems: InventoryItemRelateToManyForUpdateInput
+  images: ProductImageRelateToManyForUpdateInput
+  categories: CategoryRelateToManyForUpdateInput
+  tags: TagRelateToManyForUpdateInput
+  variants: ProductVariantRelateToManyForUpdateInput
+  materials: BillOfMaterialRelateToManyForUpdateInput
+  createdBy: UserRelateToOneForUpdateInput
   createdAt: DateTime
+  updatedAt: DateTime
+  orderItems: OrderItemRelateToManyForUpdateInput
+}
+
+input InventoryItemRelateToManyForUpdateInput {
+  disconnect: [InventoryItemWhereUniqueInput!]
+  set: [InventoryItemWhereUniqueInput!]
+  create: [InventoryItemCreateInput!]
+  connect: [InventoryItemWhereUniqueInput!]
+}
+
+input ProductImageRelateToManyForUpdateInput {
+  disconnect: [ProductImageWhereUniqueInput!]
+  set: [ProductImageWhereUniqueInput!]
+  create: [ProductImageCreateInput!]
+  connect: [ProductImageWhereUniqueInput!]
+}
+
+input CategoryRelateToManyForUpdateInput {
+  disconnect: [CategoryWhereUniqueInput!]
+  set: [CategoryWhereUniqueInput!]
+  create: [CategoryCreateInput!]
+  connect: [CategoryWhereUniqueInput!]
+}
+
+input TagRelateToManyForUpdateInput {
+  disconnect: [TagWhereUniqueInput!]
+  set: [TagWhereUniqueInput!]
+  create: [TagCreateInput!]
+  connect: [TagWhereUniqueInput!]
+}
+
+input ProductVariantRelateToManyForUpdateInput {
+  disconnect: [ProductVariantWhereUniqueInput!]
+  set: [ProductVariantWhereUniqueInput!]
+  create: [ProductVariantCreateInput!]
+  connect: [ProductVariantWhereUniqueInput!]
+}
+
+input BillOfMaterialRelateToManyForUpdateInput {
+  disconnect: [BillOfMaterialWhereUniqueInput!]
+  set: [BillOfMaterialWhereUniqueInput!]
+  create: [BillOfMaterialCreateInput!]
+  connect: [BillOfMaterialWhereUniqueInput!]
+}
+
+input OrderItemRelateToManyForUpdateInput {
+  disconnect: [OrderItemWhereUniqueInput!]
+  set: [OrderItemWhereUniqueInput!]
+  create: [OrderItemCreateInput!]
+  connect: [OrderItemWhereUniqueInput!]
+}
+
+input ProductUpdateArgs {
+  where: ProductWhereUniqueInput!
+  data: ProductUpdateInput!
+}
+
+input ProductCreateInput {
+  name: String
+  description: JSON
+  sku: String
+  barcode: String
+  price: Int
+  cost: Int
+  weight: Float
+  dimensions: JSON
+  status: ProductStatusType
+  inventoryItems: InventoryItemRelateToManyForCreateInput
+  images: ProductImageRelateToManyForCreateInput
+  categories: CategoryRelateToManyForCreateInput
+  tags: TagRelateToManyForCreateInput
+  variants: ProductVariantRelateToManyForCreateInput
+  materials: BillOfMaterialRelateToManyForCreateInput
+  createdBy: UserRelateToOneForCreateInput
+  createdAt: DateTime
+  updatedAt: DateTime
+  orderItems: OrderItemRelateToManyForCreateInput
+}
+
+input InventoryItemRelateToManyForCreateInput {
+  create: [InventoryItemCreateInput!]
+  connect: [InventoryItemWhereUniqueInput!]
+}
+
+input ProductImageRelateToManyForCreateInput {
+  create: [ProductImageCreateInput!]
+  connect: [ProductImageWhereUniqueInput!]
+}
+
+input CategoryRelateToManyForCreateInput {
+  create: [CategoryCreateInput!]
+  connect: [CategoryWhereUniqueInput!]
+}
+
+input TagRelateToManyForCreateInput {
+  create: [TagCreateInput!]
+  connect: [TagWhereUniqueInput!]
+}
+
+input ProductVariantRelateToManyForCreateInput {
+  create: [ProductVariantCreateInput!]
+  connect: [ProductVariantWhereUniqueInput!]
+}
+
+input BillOfMaterialRelateToManyForCreateInput {
+  create: [BillOfMaterialCreateInput!]
+  connect: [BillOfMaterialWhereUniqueInput!]
+}
+
+input OrderItemRelateToManyForCreateInput {
+  create: [OrderItemCreateInput!]
+  connect: [OrderItemWhereUniqueInput!]
+}
+
+type ProductVariant {
+  id: ID!
+  name: String
+  sku: String
+  barcode: String
+  price: Int
+  attributes: JSON
+  parentProduct: Product
+  inventoryItems(where: InventoryItemWhereInput! = {}, orderBy: [InventoryItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InventoryItemWhereUniqueInput): [InventoryItem!]
+  inventoryItemsCount(where: InventoryItemWhereInput! = {}): Int
+  images(where: ProductImageWhereInput! = {}, orderBy: [ProductImageOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProductImageWhereUniqueInput): [ProductImage!]
+  imagesCount(where: ProductImageWhereInput! = {}): Int
+  orderItems(where: OrderItemWhereInput! = {}, orderBy: [OrderItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: OrderItemWhereUniqueInput): [OrderItem!]
+  orderItemsCount(where: OrderItemWhereInput! = {}): Int
+}
+
+input ProductVariantWhereUniqueInput {
+  id: ID
+  sku: String
+  barcode: String
+}
+
+input ProductVariantWhereInput {
+  AND: [ProductVariantWhereInput!]
+  OR: [ProductVariantWhereInput!]
+  NOT: [ProductVariantWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  sku: StringFilter
+  barcode: StringFilter
+  price: IntNullableFilter
+  parentProduct: ProductWhereInput
+  inventoryItems: InventoryItemManyRelationFilter
+  images: ProductImageManyRelationFilter
+  orderItems: OrderItemManyRelationFilter
+}
+
+input ProductVariantOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  sku: OrderDirection
+  barcode: OrderDirection
+  price: OrderDirection
+}
+
+input ProductVariantUpdateInput {
+  name: String
+  sku: String
+  barcode: String
+  price: Int
+  attributes: JSON
+  parentProduct: ProductRelateToOneForUpdateInput
+  inventoryItems: InventoryItemRelateToManyForUpdateInput
+  images: ProductImageRelateToManyForUpdateInput
+  orderItems: OrderItemRelateToManyForUpdateInput
 }
 
 input ProductRelateToOneForUpdateInput {
@@ -1117,27 +737,21 @@ input ProductRelateToOneForUpdateInput {
   disconnect: Boolean
 }
 
-input InventoryRelateToOneForUpdateInput {
-  create: InventoryCreateInput
-  connect: InventoryWhereUniqueInput
-  disconnect: Boolean
+input ProductVariantUpdateArgs {
+  where: ProductVariantWhereUniqueInput!
+  data: ProductVariantUpdateInput!
 }
 
-input BOMUpdateArgs {
-  where: BOMWhereUniqueInput!
-  data: BOMUpdateInput!
-}
-
-input BOMCreateInput {
+input ProductVariantCreateInput {
   name: String
-  description: String
-  composite: ProductRelateToOneForCreateInput
-  component: InventoryRelateToOneForCreateInput
-  users: UserRelateToManyForCreateInput
-  quantity: Int
-  unit: String
-  updatedAt: DateTime
-  createdAt: DateTime
+  sku: String
+  barcode: String
+  price: Int
+  attributes: JSON
+  parentProduct: ProductRelateToOneForCreateInput
+  inventoryItems: InventoryItemRelateToManyForCreateInput
+  images: ProductImageRelateToManyForCreateInput
+  orderItems: OrderItemRelateToManyForCreateInput
 }
 
 input ProductRelateToOneForCreateInput {
@@ -1145,9 +759,2614 @@ input ProductRelateToOneForCreateInput {
   connect: ProductWhereUniqueInput
 }
 
-input InventoryRelateToOneForCreateInput {
-  create: InventoryCreateInput
-  connect: InventoryWhereUniqueInput
+type ProductImage {
+  id: ID!
+  altText: String
+  image: String
+  product: Product
+  variant: ProductVariant
+  isPrimary: Boolean
+}
+
+input ProductImageWhereUniqueInput {
+  id: ID
+}
+
+input ProductImageWhereInput {
+  AND: [ProductImageWhereInput!]
+  OR: [ProductImageWhereInput!]
+  NOT: [ProductImageWhereInput!]
+  id: IDFilter
+  altText: StringFilter
+  image: StringFilter
+  product: ProductWhereInput
+  variant: ProductVariantWhereInput
+  isPrimary: BooleanFilter
+}
+
+input ProductImageOrderByInput {
+  id: OrderDirection
+  altText: OrderDirection
+  image: OrderDirection
+  isPrimary: OrderDirection
+}
+
+input ProductImageUpdateInput {
+  altText: String
+  image: String
+  product: ProductRelateToOneForUpdateInput
+  variant: ProductVariantRelateToOneForUpdateInput
+  isPrimary: Boolean
+}
+
+input ProductVariantRelateToOneForUpdateInput {
+  create: ProductVariantCreateInput
+  connect: ProductVariantWhereUniqueInput
+  disconnect: Boolean
+}
+
+input ProductImageUpdateArgs {
+  where: ProductImageWhereUniqueInput!
+  data: ProductImageUpdateInput!
+}
+
+input ProductImageCreateInput {
+  altText: String
+  image: String
+  product: ProductRelateToOneForCreateInput
+  variant: ProductVariantRelateToOneForCreateInput
+  isPrimary: Boolean
+}
+
+input ProductVariantRelateToOneForCreateInput {
+  create: ProductVariantCreateInput
+  connect: ProductVariantWhereUniqueInput
+}
+
+type InventoryItem {
+  id: ID!
+  product: Product
+  variant: ProductVariant
+  location: WarehouseLocation
+  section: WarehouseSection
+  quantity: Int
+  minStockLevel: Int
+  maxStockLevel: Int
+  reorderPoint: Int
+  reorderQuantity: Int
+  lastStockCheck: DateTime
+  adjustments(where: InventoryAdjustmentWhereInput! = {}, orderBy: [InventoryAdjustmentOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InventoryAdjustmentWhereUniqueInput): [InventoryAdjustment!]
+  adjustmentsCount(where: InventoryAdjustmentWhereInput! = {}): Int
+  transfers(where: InventoryTransferWhereInput! = {}, orderBy: [InventoryTransferOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InventoryTransferWhereUniqueInput): [InventoryTransfer!]
+  transfersCount(where: InventoryTransferWhereInput! = {}): Int
+}
+
+input InventoryItemWhereUniqueInput {
+  id: ID
+}
+
+input InventoryItemWhereInput {
+  AND: [InventoryItemWhereInput!]
+  OR: [InventoryItemWhereInput!]
+  NOT: [InventoryItemWhereInput!]
+  id: IDFilter
+  product: ProductWhereInput
+  variant: ProductVariantWhereInput
+  location: WarehouseLocationWhereInput
+  section: WarehouseSectionWhereInput
+  quantity: IntFilter
+  minStockLevel: IntNullableFilter
+  maxStockLevel: IntNullableFilter
+  reorderPoint: IntNullableFilter
+  reorderQuantity: IntNullableFilter
+  lastStockCheck: DateTimeNullableFilter
+  adjustments: InventoryAdjustmentManyRelationFilter
+  transfers: InventoryTransferManyRelationFilter
+}
+
+input InventoryAdjustmentManyRelationFilter {
+  every: InventoryAdjustmentWhereInput
+  some: InventoryAdjustmentWhereInput
+  none: InventoryAdjustmentWhereInput
+}
+
+input InventoryTransferManyRelationFilter {
+  every: InventoryTransferWhereInput
+  some: InventoryTransferWhereInput
+  none: InventoryTransferWhereInput
+}
+
+input InventoryItemOrderByInput {
+  id: OrderDirection
+  quantity: OrderDirection
+  minStockLevel: OrderDirection
+  maxStockLevel: OrderDirection
+  reorderPoint: OrderDirection
+  reorderQuantity: OrderDirection
+  lastStockCheck: OrderDirection
+}
+
+input InventoryItemUpdateInput {
+  product: ProductRelateToOneForUpdateInput
+  variant: ProductVariantRelateToOneForUpdateInput
+  location: WarehouseLocationRelateToOneForUpdateInput
+  section: WarehouseSectionRelateToOneForUpdateInput
+  quantity: Int
+  minStockLevel: Int
+  maxStockLevel: Int
+  reorderPoint: Int
+  reorderQuantity: Int
+  lastStockCheck: DateTime
+  adjustments: InventoryAdjustmentRelateToManyForUpdateInput
+  transfers: InventoryTransferRelateToManyForUpdateInput
+}
+
+input WarehouseLocationRelateToOneForUpdateInput {
+  create: WarehouseLocationCreateInput
+  connect: WarehouseLocationWhereUniqueInput
+  disconnect: Boolean
+}
+
+input WarehouseSectionRelateToOneForUpdateInput {
+  create: WarehouseSectionCreateInput
+  connect: WarehouseSectionWhereUniqueInput
+  disconnect: Boolean
+}
+
+input InventoryAdjustmentRelateToManyForUpdateInput {
+  disconnect: [InventoryAdjustmentWhereUniqueInput!]
+  set: [InventoryAdjustmentWhereUniqueInput!]
+  create: [InventoryAdjustmentCreateInput!]
+  connect: [InventoryAdjustmentWhereUniqueInput!]
+}
+
+input InventoryTransferRelateToManyForUpdateInput {
+  disconnect: [InventoryTransferWhereUniqueInput!]
+  set: [InventoryTransferWhereUniqueInput!]
+  create: [InventoryTransferCreateInput!]
+  connect: [InventoryTransferWhereUniqueInput!]
+}
+
+input InventoryItemUpdateArgs {
+  where: InventoryItemWhereUniqueInput!
+  data: InventoryItemUpdateInput!
+}
+
+input InventoryItemCreateInput {
+  product: ProductRelateToOneForCreateInput
+  variant: ProductVariantRelateToOneForCreateInput
+  location: WarehouseLocationRelateToOneForCreateInput
+  section: WarehouseSectionRelateToOneForCreateInput
+  quantity: Int
+  minStockLevel: Int
+  maxStockLevel: Int
+  reorderPoint: Int
+  reorderQuantity: Int
+  lastStockCheck: DateTime
+  adjustments: InventoryAdjustmentRelateToManyForCreateInput
+  transfers: InventoryTransferRelateToManyForCreateInput
+}
+
+input WarehouseLocationRelateToOneForCreateInput {
+  create: WarehouseLocationCreateInput
+  connect: WarehouseLocationWhereUniqueInput
+}
+
+input WarehouseSectionRelateToOneForCreateInput {
+  create: WarehouseSectionCreateInput
+  connect: WarehouseSectionWhereUniqueInput
+}
+
+input InventoryAdjustmentRelateToManyForCreateInput {
+  create: [InventoryAdjustmentCreateInput!]
+  connect: [InventoryAdjustmentWhereUniqueInput!]
+}
+
+input InventoryTransferRelateToManyForCreateInput {
+  create: [InventoryTransferCreateInput!]
+  connect: [InventoryTransferWhereUniqueInput!]
+}
+
+type InventoryAdjustment {
+  id: ID!
+  inventoryItem: InventoryItem
+  adjustmentType: InventoryAdjustmentAdjustmentTypeType
+  quantity: Int
+  previousQuantity: Int
+  newQuantity: Int
+  reason: String
+  notes: String
+  performedBy: User
+  timestamp: DateTime
+}
+
+enum InventoryAdjustmentAdjustmentTypeType {
+  add
+  remove
+  set
+  damage
+  loss
+  return
+}
+
+input InventoryAdjustmentWhereUniqueInput {
+  id: ID
+}
+
+input InventoryAdjustmentWhereInput {
+  AND: [InventoryAdjustmentWhereInput!]
+  OR: [InventoryAdjustmentWhereInput!]
+  NOT: [InventoryAdjustmentWhereInput!]
+  id: IDFilter
+  inventoryItem: InventoryItemWhereInput
+  adjustmentType: InventoryAdjustmentAdjustmentTypeTypeNullableFilter
+  quantity: IntFilter
+  previousQuantity: IntNullableFilter
+  newQuantity: IntNullableFilter
+  reason: StringFilter
+  notes: StringFilter
+  performedBy: UserWhereInput
+  timestamp: DateTimeNullableFilter
+}
+
+input InventoryAdjustmentAdjustmentTypeTypeNullableFilter {
+  equals: InventoryAdjustmentAdjustmentTypeType
+  in: [InventoryAdjustmentAdjustmentTypeType!]
+  notIn: [InventoryAdjustmentAdjustmentTypeType!]
+  not: InventoryAdjustmentAdjustmentTypeTypeNullableFilter
+}
+
+input InventoryAdjustmentOrderByInput {
+  id: OrderDirection
+  adjustmentType: OrderDirection
+  quantity: OrderDirection
+  previousQuantity: OrderDirection
+  newQuantity: OrderDirection
+  reason: OrderDirection
+  notes: OrderDirection
+  timestamp: OrderDirection
+}
+
+input InventoryAdjustmentUpdateInput {
+  inventoryItem: InventoryItemRelateToOneForUpdateInput
+  adjustmentType: InventoryAdjustmentAdjustmentTypeType
+  quantity: Int
+  previousQuantity: Int
+  newQuantity: Int
+  reason: String
+  notes: String
+  performedBy: UserRelateToOneForUpdateInput
+  timestamp: DateTime
+}
+
+input InventoryItemRelateToOneForUpdateInput {
+  create: InventoryItemCreateInput
+  connect: InventoryItemWhereUniqueInput
+  disconnect: Boolean
+}
+
+input InventoryAdjustmentUpdateArgs {
+  where: InventoryAdjustmentWhereUniqueInput!
+  data: InventoryAdjustmentUpdateInput!
+}
+
+input InventoryAdjustmentCreateInput {
+  inventoryItem: InventoryItemRelateToOneForCreateInput
+  adjustmentType: InventoryAdjustmentAdjustmentTypeType
+  quantity: Int
+  previousQuantity: Int
+  newQuantity: Int
+  reason: String
+  notes: String
+  performedBy: UserRelateToOneForCreateInput
+  timestamp: DateTime
+}
+
+input InventoryItemRelateToOneForCreateInput {
+  create: InventoryItemCreateInput
+  connect: InventoryItemWhereUniqueInput
+}
+
+type Material {
+  id: ID!
+  name: String
+  description: String
+  sku: String
+  unit: String
+  unitCost: Int
+  supplier: Supplier
+  category: Category
+  tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
+  tagsCount(where: TagWhereInput! = {}): Int
+  inventory(where: MaterialInventoryWhereInput! = {}, orderBy: [MaterialInventoryOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: MaterialInventoryWhereUniqueInput): [MaterialInventory!]
+  inventoryCount(where: MaterialInventoryWhereInput! = {}): Int
+  usedIn(where: BillOfMaterialWhereInput! = {}, orderBy: [BillOfMaterialOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: BillOfMaterialWhereUniqueInput): [BillOfMaterial!]
+  usedInCount(where: BillOfMaterialWhereInput! = {}): Int
+  createdBy: User
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input MaterialWhereUniqueInput {
+  id: ID
+  sku: String
+}
+
+input MaterialWhereInput {
+  AND: [MaterialWhereInput!]
+  OR: [MaterialWhereInput!]
+  NOT: [MaterialWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  description: StringFilter
+  sku: StringFilter
+  unit: StringFilter
+  unitCost: IntNullableFilter
+  supplier: SupplierWhereInput
+  category: CategoryWhereInput
+  tags: TagManyRelationFilter
+  inventory: MaterialInventoryManyRelationFilter
+  usedIn: BillOfMaterialManyRelationFilter
+  createdBy: UserWhereInput
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+}
+
+input MaterialInventoryManyRelationFilter {
+  every: MaterialInventoryWhereInput
+  some: MaterialInventoryWhereInput
+  none: MaterialInventoryWhereInput
+}
+
+input MaterialOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  description: OrderDirection
+  sku: OrderDirection
+  unit: OrderDirection
+  unitCost: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input MaterialUpdateInput {
+  name: String
+  description: String
+  sku: String
+  unit: String
+  unitCost: Int
+  supplier: SupplierRelateToOneForUpdateInput
+  category: CategoryRelateToOneForUpdateInput
+  tags: TagRelateToManyForUpdateInput
+  inventory: MaterialInventoryRelateToManyForUpdateInput
+  usedIn: BillOfMaterialRelateToManyForUpdateInput
+  createdBy: UserRelateToOneForUpdateInput
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input SupplierRelateToOneForUpdateInput {
+  create: SupplierCreateInput
+  connect: SupplierWhereUniqueInput
+  disconnect: Boolean
+}
+
+input CategoryRelateToOneForUpdateInput {
+  create: CategoryCreateInput
+  connect: CategoryWhereUniqueInput
+  disconnect: Boolean
+}
+
+input MaterialInventoryRelateToManyForUpdateInput {
+  disconnect: [MaterialInventoryWhereUniqueInput!]
+  set: [MaterialInventoryWhereUniqueInput!]
+  create: [MaterialInventoryCreateInput!]
+  connect: [MaterialInventoryWhereUniqueInput!]
+}
+
+input MaterialUpdateArgs {
+  where: MaterialWhereUniqueInput!
+  data: MaterialUpdateInput!
+}
+
+input MaterialCreateInput {
+  name: String
+  description: String
+  sku: String
+  unit: String
+  unitCost: Int
+  supplier: SupplierRelateToOneForCreateInput
+  category: CategoryRelateToOneForCreateInput
+  tags: TagRelateToManyForCreateInput
+  inventory: MaterialInventoryRelateToManyForCreateInput
+  usedIn: BillOfMaterialRelateToManyForCreateInput
+  createdBy: UserRelateToOneForCreateInput
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input SupplierRelateToOneForCreateInput {
+  create: SupplierCreateInput
+  connect: SupplierWhereUniqueInput
+}
+
+input CategoryRelateToOneForCreateInput {
+  create: CategoryCreateInput
+  connect: CategoryWhereUniqueInput
+}
+
+input MaterialInventoryRelateToManyForCreateInput {
+  create: [MaterialInventoryCreateInput!]
+  connect: [MaterialInventoryWhereUniqueInput!]
+}
+
+type MaterialInventory {
+  id: ID!
+  material: Material
+  location: WarehouseLocation
+  section: WarehouseSection
+  quantity: Float
+  minStockLevel: Float
+  reorderPoint: Float
+  reorderQuantity: Float
+  lastStockCheck: DateTime
+  adjustments(where: MaterialAdjustmentWhereInput! = {}, orderBy: [MaterialAdjustmentOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: MaterialAdjustmentWhereUniqueInput): [MaterialAdjustment!]
+  adjustmentsCount(where: MaterialAdjustmentWhereInput! = {}): Int
+}
+
+input MaterialInventoryWhereUniqueInput {
+  id: ID
+}
+
+input MaterialInventoryWhereInput {
+  AND: [MaterialInventoryWhereInput!]
+  OR: [MaterialInventoryWhereInput!]
+  NOT: [MaterialInventoryWhereInput!]
+  id: IDFilter
+  material: MaterialWhereInput
+  location: WarehouseLocationWhereInput
+  section: WarehouseSectionWhereInput
+  quantity: FloatFilter
+  minStockLevel: FloatNullableFilter
+  reorderPoint: FloatNullableFilter
+  reorderQuantity: FloatNullableFilter
+  lastStockCheck: DateTimeNullableFilter
+  adjustments: MaterialAdjustmentManyRelationFilter
+}
+
+input FloatFilter {
+  equals: Float
+  in: [Float!]
+  notIn: [Float!]
+  lt: Float
+  lte: Float
+  gt: Float
+  gte: Float
+  not: FloatFilter
+}
+
+input MaterialAdjustmentManyRelationFilter {
+  every: MaterialAdjustmentWhereInput
+  some: MaterialAdjustmentWhereInput
+  none: MaterialAdjustmentWhereInput
+}
+
+input MaterialInventoryOrderByInput {
+  id: OrderDirection
+  quantity: OrderDirection
+  minStockLevel: OrderDirection
+  reorderPoint: OrderDirection
+  reorderQuantity: OrderDirection
+  lastStockCheck: OrderDirection
+}
+
+input MaterialInventoryUpdateInput {
+  material: MaterialRelateToOneForUpdateInput
+  location: WarehouseLocationRelateToOneForUpdateInput
+  section: WarehouseSectionRelateToOneForUpdateInput
+  quantity: Float
+  minStockLevel: Float
+  reorderPoint: Float
+  reorderQuantity: Float
+  lastStockCheck: DateTime
+  adjustments: MaterialAdjustmentRelateToManyForUpdateInput
+}
+
+input MaterialRelateToOneForUpdateInput {
+  create: MaterialCreateInput
+  connect: MaterialWhereUniqueInput
+  disconnect: Boolean
+}
+
+input MaterialAdjustmentRelateToManyForUpdateInput {
+  disconnect: [MaterialAdjustmentWhereUniqueInput!]
+  set: [MaterialAdjustmentWhereUniqueInput!]
+  create: [MaterialAdjustmentCreateInput!]
+  connect: [MaterialAdjustmentWhereUniqueInput!]
+}
+
+input MaterialInventoryUpdateArgs {
+  where: MaterialInventoryWhereUniqueInput!
+  data: MaterialInventoryUpdateInput!
+}
+
+input MaterialInventoryCreateInput {
+  material: MaterialRelateToOneForCreateInput
+  location: WarehouseLocationRelateToOneForCreateInput
+  section: WarehouseSectionRelateToOneForCreateInput
+  quantity: Float
+  minStockLevel: Float
+  reorderPoint: Float
+  reorderQuantity: Float
+  lastStockCheck: DateTime
+  adjustments: MaterialAdjustmentRelateToManyForCreateInput
+}
+
+input MaterialRelateToOneForCreateInput {
+  create: MaterialCreateInput
+  connect: MaterialWhereUniqueInput
+}
+
+input MaterialAdjustmentRelateToManyForCreateInput {
+  create: [MaterialAdjustmentCreateInput!]
+  connect: [MaterialAdjustmentWhereUniqueInput!]
+}
+
+type MaterialAdjustment {
+  id: ID!
+  materialInventory: MaterialInventory
+  adjustmentType: MaterialAdjustmentAdjustmentTypeType
+  quantity: Float
+  previousQuantity: Float
+  newQuantity: Float
+  reason: String
+  notes: String
+  performedBy: User
+  timestamp: DateTime
+}
+
+enum MaterialAdjustmentAdjustmentTypeType {
+  add
+  remove
+  set
+  damage
+  loss
+}
+
+input MaterialAdjustmentWhereUniqueInput {
+  id: ID
+}
+
+input MaterialAdjustmentWhereInput {
+  AND: [MaterialAdjustmentWhereInput!]
+  OR: [MaterialAdjustmentWhereInput!]
+  NOT: [MaterialAdjustmentWhereInput!]
+  id: IDFilter
+  materialInventory: MaterialInventoryWhereInput
+  adjustmentType: MaterialAdjustmentAdjustmentTypeTypeNullableFilter
+  quantity: FloatFilter
+  previousQuantity: FloatNullableFilter
+  newQuantity: FloatNullableFilter
+  reason: StringFilter
+  notes: StringFilter
+  performedBy: UserWhereInput
+  timestamp: DateTimeNullableFilter
+}
+
+input MaterialAdjustmentAdjustmentTypeTypeNullableFilter {
+  equals: MaterialAdjustmentAdjustmentTypeType
+  in: [MaterialAdjustmentAdjustmentTypeType!]
+  notIn: [MaterialAdjustmentAdjustmentTypeType!]
+  not: MaterialAdjustmentAdjustmentTypeTypeNullableFilter
+}
+
+input MaterialAdjustmentOrderByInput {
+  id: OrderDirection
+  adjustmentType: OrderDirection
+  quantity: OrderDirection
+  previousQuantity: OrderDirection
+  newQuantity: OrderDirection
+  reason: OrderDirection
+  notes: OrderDirection
+  timestamp: OrderDirection
+}
+
+input MaterialAdjustmentUpdateInput {
+  materialInventory: MaterialInventoryRelateToOneForUpdateInput
+  adjustmentType: MaterialAdjustmentAdjustmentTypeType
+  quantity: Float
+  previousQuantity: Float
+  newQuantity: Float
+  reason: String
+  notes: String
+  performedBy: UserRelateToOneForUpdateInput
+  timestamp: DateTime
+}
+
+input MaterialInventoryRelateToOneForUpdateInput {
+  create: MaterialInventoryCreateInput
+  connect: MaterialInventoryWhereUniqueInput
+  disconnect: Boolean
+}
+
+input MaterialAdjustmentUpdateArgs {
+  where: MaterialAdjustmentWhereUniqueInput!
+  data: MaterialAdjustmentUpdateInput!
+}
+
+input MaterialAdjustmentCreateInput {
+  materialInventory: MaterialInventoryRelateToOneForCreateInput
+  adjustmentType: MaterialAdjustmentAdjustmentTypeType
+  quantity: Float
+  previousQuantity: Float
+  newQuantity: Float
+  reason: String
+  notes: String
+  performedBy: UserRelateToOneForCreateInput
+  timestamp: DateTime
+}
+
+input MaterialInventoryRelateToOneForCreateInput {
+  create: MaterialInventoryCreateInput
+  connect: MaterialInventoryWhereUniqueInput
+}
+
+type BillOfMaterial {
+  id: ID!
+  product: Product
+  material: Material
+  quantity: Float
+  wastagePercent: Float
+  notes: String
+}
+
+input BillOfMaterialWhereUniqueInput {
+  id: ID
+}
+
+input BillOfMaterialWhereInput {
+  AND: [BillOfMaterialWhereInput!]
+  OR: [BillOfMaterialWhereInput!]
+  NOT: [BillOfMaterialWhereInput!]
+  id: IDFilter
+  product: ProductWhereInput
+  material: MaterialWhereInput
+  quantity: FloatFilter
+  wastagePercent: FloatNullableFilter
+  notes: StringFilter
+}
+
+input BillOfMaterialOrderByInput {
+  id: OrderDirection
+  quantity: OrderDirection
+  wastagePercent: OrderDirection
+  notes: OrderDirection
+}
+
+input BillOfMaterialUpdateInput {
+  product: ProductRelateToOneForUpdateInput
+  material: MaterialRelateToOneForUpdateInput
+  quantity: Float
+  wastagePercent: Float
+  notes: String
+}
+
+input BillOfMaterialUpdateArgs {
+  where: BillOfMaterialWhereUniqueInput!
+  data: BillOfMaterialUpdateInput!
+}
+
+input BillOfMaterialCreateInput {
+  product: ProductRelateToOneForCreateInput
+  material: MaterialRelateToOneForCreateInput
+  quantity: Float
+  wastagePercent: Float
+  notes: String
+}
+
+type Order {
+  id: ID!
+  orderNumber: String
+  customer: Customer
+  orderDate: DateTime
+  status: OrderStatusType
+  paymentStatus: OrderPaymentStatusType
+  source: OrderSourceType
+  sourceId: String
+  items(where: OrderItemWhereInput! = {}, orderBy: [OrderItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: OrderItemWhereUniqueInput): [OrderItem!]
+  itemsCount(where: OrderItemWhereInput! = {}): Int
+  subtotal: Int
+  taxAmount: Int
+  shippingAmount: Int
+  discountAmount: Int
+  totalAmount: Int
+  notes: String
+  shippingAddress: Address
+  billingAddress: Address
+  shipment: Shipment
+  createdBy: User
+  retailLocation: RetailLocation
+  tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
+  tagsCount(where: TagWhereInput! = {}): Int
+}
+
+enum OrderStatusType {
+  draft
+  processing
+  shipped
+  delivered
+  cancelled
+  returned
+}
+
+enum OrderPaymentStatusType {
+  pending
+  paid
+  refunded
+  failed
+}
+
+enum OrderSourceType {
+  manual
+  shopify
+  etsy
+  website
+  pos
+}
+
+input OrderWhereUniqueInput {
+  id: ID
+  orderNumber: String
+}
+
+input OrderWhereInput {
+  AND: [OrderWhereInput!]
+  OR: [OrderWhereInput!]
+  NOT: [OrderWhereInput!]
+  id: IDFilter
+  orderNumber: StringFilter
+  customer: CustomerWhereInput
+  orderDate: DateTimeNullableFilter
+  status: OrderStatusTypeNullableFilter
+  paymentStatus: OrderPaymentStatusTypeNullableFilter
+  source: OrderSourceTypeNullableFilter
+  sourceId: StringFilter
+  items: OrderItemManyRelationFilter
+  subtotal: IntNullableFilter
+  taxAmount: IntNullableFilter
+  shippingAmount: IntNullableFilter
+  discountAmount: IntNullableFilter
+  totalAmount: IntNullableFilter
+  notes: StringFilter
+  shippingAddress: AddressWhereInput
+  billingAddress: AddressWhereInput
+  shipment: ShipmentWhereInput
+  createdBy: UserWhereInput
+  retailLocation: RetailLocationWhereInput
+  tags: TagManyRelationFilter
+}
+
+input OrderStatusTypeNullableFilter {
+  equals: OrderStatusType
+  in: [OrderStatusType!]
+  notIn: [OrderStatusType!]
+  not: OrderStatusTypeNullableFilter
+}
+
+input OrderPaymentStatusTypeNullableFilter {
+  equals: OrderPaymentStatusType
+  in: [OrderPaymentStatusType!]
+  notIn: [OrderPaymentStatusType!]
+  not: OrderPaymentStatusTypeNullableFilter
+}
+
+input OrderSourceTypeNullableFilter {
+  equals: OrderSourceType
+  in: [OrderSourceType!]
+  notIn: [OrderSourceType!]
+  not: OrderSourceTypeNullableFilter
+}
+
+input OrderOrderByInput {
+  id: OrderDirection
+  orderNumber: OrderDirection
+  orderDate: OrderDirection
+  status: OrderDirection
+  paymentStatus: OrderDirection
+  source: OrderDirection
+  sourceId: OrderDirection
+  subtotal: OrderDirection
+  taxAmount: OrderDirection
+  shippingAmount: OrderDirection
+  discountAmount: OrderDirection
+  totalAmount: OrderDirection
+  notes: OrderDirection
+}
+
+input OrderUpdateInput {
+  orderNumber: String
+  customer: CustomerRelateToOneForUpdateInput
+  orderDate: DateTime
+  status: OrderStatusType
+  paymentStatus: OrderPaymentStatusType
+  source: OrderSourceType
+  sourceId: String
+  items: OrderItemRelateToManyForUpdateInput
+  subtotal: Int
+  taxAmount: Int
+  shippingAmount: Int
+  discountAmount: Int
+  totalAmount: Int
+  notes: String
+  shippingAddress: AddressRelateToOneForUpdateInput
+  billingAddress: AddressRelateToOneForUpdateInput
+  shipment: ShipmentRelateToOneForUpdateInput
+  createdBy: UserRelateToOneForUpdateInput
+  retailLocation: RetailLocationRelateToOneForUpdateInput
+  tags: TagRelateToManyForUpdateInput
+}
+
+input CustomerRelateToOneForUpdateInput {
+  create: CustomerCreateInput
+  connect: CustomerWhereUniqueInput
+  disconnect: Boolean
+}
+
+input AddressRelateToOneForUpdateInput {
+  create: AddressCreateInput
+  connect: AddressWhereUniqueInput
+  disconnect: Boolean
+}
+
+input ShipmentRelateToOneForUpdateInput {
+  create: ShipmentCreateInput
+  connect: ShipmentWhereUniqueInput
+  disconnect: Boolean
+}
+
+input RetailLocationRelateToOneForUpdateInput {
+  create: RetailLocationCreateInput
+  connect: RetailLocationWhereUniqueInput
+  disconnect: Boolean
+}
+
+input OrderUpdateArgs {
+  where: OrderWhereUniqueInput!
+  data: OrderUpdateInput!
+}
+
+input OrderCreateInput {
+  orderNumber: String
+  customer: CustomerRelateToOneForCreateInput
+  orderDate: DateTime
+  status: OrderStatusType
+  paymentStatus: OrderPaymentStatusType
+  source: OrderSourceType
+  sourceId: String
+  items: OrderItemRelateToManyForCreateInput
+  subtotal: Int
+  taxAmount: Int
+  shippingAmount: Int
+  discountAmount: Int
+  totalAmount: Int
+  notes: String
+  shippingAddress: AddressRelateToOneForCreateInput
+  billingAddress: AddressRelateToOneForCreateInput
+  shipment: ShipmentRelateToOneForCreateInput
+  createdBy: UserRelateToOneForCreateInput
+  retailLocation: RetailLocationRelateToOneForCreateInput
+  tags: TagRelateToManyForCreateInput
+}
+
+input CustomerRelateToOneForCreateInput {
+  create: CustomerCreateInput
+  connect: CustomerWhereUniqueInput
+}
+
+input AddressRelateToOneForCreateInput {
+  create: AddressCreateInput
+  connect: AddressWhereUniqueInput
+}
+
+input ShipmentRelateToOneForCreateInput {
+  create: ShipmentCreateInput
+  connect: ShipmentWhereUniqueInput
+}
+
+input RetailLocationRelateToOneForCreateInput {
+  create: RetailLocationCreateInput
+  connect: RetailLocationWhereUniqueInput
+}
+
+type OrderItem {
+  id: ID!
+  order: Order
+  product: Product
+  variant: ProductVariant
+  quantity: Int
+  unitPrice: Int
+  discount: Int
+  tax: Int
+  total: Int
+  fulfilled: Int
+  notes: String
+}
+
+input OrderItemWhereUniqueInput {
+  id: ID
+}
+
+input OrderItemWhereInput {
+  AND: [OrderItemWhereInput!]
+  OR: [OrderItemWhereInput!]
+  NOT: [OrderItemWhereInput!]
+  id: IDFilter
+  order: OrderWhereInput
+  product: ProductWhereInput
+  variant: ProductVariantWhereInput
+  quantity: IntFilter
+  unitPrice: IntFilter
+  discount: IntNullableFilter
+  tax: IntNullableFilter
+  total: IntNullableFilter
+  fulfilled: IntNullableFilter
+  notes: StringFilter
+}
+
+input OrderItemOrderByInput {
+  id: OrderDirection
+  quantity: OrderDirection
+  unitPrice: OrderDirection
+  discount: OrderDirection
+  tax: OrderDirection
+  total: OrderDirection
+  fulfilled: OrderDirection
+  notes: OrderDirection
+}
+
+input OrderItemUpdateInput {
+  order: OrderRelateToOneForUpdateInput
+  product: ProductRelateToOneForUpdateInput
+  variant: ProductVariantRelateToOneForUpdateInput
+  quantity: Int
+  unitPrice: Int
+  discount: Int
+  tax: Int
+  total: Int
+  fulfilled: Int
+  notes: String
+}
+
+input OrderRelateToOneForUpdateInput {
+  create: OrderCreateInput
+  connect: OrderWhereUniqueInput
+  disconnect: Boolean
+}
+
+input OrderItemUpdateArgs {
+  where: OrderItemWhereUniqueInput!
+  data: OrderItemUpdateInput!
+}
+
+input OrderItemCreateInput {
+  order: OrderRelateToOneForCreateInput
+  product: ProductRelateToOneForCreateInput
+  variant: ProductVariantRelateToOneForCreateInput
+  quantity: Int
+  unitPrice: Int
+  discount: Int
+  tax: Int
+  total: Int
+  fulfilled: Int
+  notes: String
+}
+
+input OrderRelateToOneForCreateInput {
+  create: OrderCreateInput
+  connect: OrderWhereUniqueInput
+}
+
+type Customer {
+  id: ID!
+  firstName: String
+  lastName: String
+  email: String
+  phone: String
+  company: String
+  taxId: String
+  notes: String
+  addresses(where: AddressWhereInput! = {}, orderBy: [AddressOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: AddressWhereUniqueInput): [Address!]
+  addressesCount(where: AddressWhereInput! = {}): Int
+  orders(where: OrderWhereInput! = {}, orderBy: [OrderOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: OrderWhereUniqueInput): [Order!]
+  ordersCount(where: OrderWhereInput! = {}): Int
+  tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
+  tagsCount(where: TagWhereInput! = {}): Int
+  createdAt: DateTime
+}
+
+input CustomerWhereUniqueInput {
+  id: ID
+  email: String
+}
+
+input CustomerWhereInput {
+  AND: [CustomerWhereInput!]
+  OR: [CustomerWhereInput!]
+  NOT: [CustomerWhereInput!]
+  id: IDFilter
+  firstName: StringFilter
+  lastName: StringFilter
+  email: StringFilter
+  phone: StringFilter
+  company: StringFilter
+  taxId: StringFilter
+  notes: StringFilter
+  addresses: AddressManyRelationFilter
+  orders: OrderManyRelationFilter
+  tags: TagManyRelationFilter
+  createdAt: DateTimeNullableFilter
+}
+
+input AddressManyRelationFilter {
+  every: AddressWhereInput
+  some: AddressWhereInput
+  none: AddressWhereInput
+}
+
+input CustomerOrderByInput {
+  id: OrderDirection
+  firstName: OrderDirection
+  lastName: OrderDirection
+  email: OrderDirection
+  phone: OrderDirection
+  company: OrderDirection
+  taxId: OrderDirection
+  notes: OrderDirection
+  createdAt: OrderDirection
+}
+
+input CustomerUpdateInput {
+  firstName: String
+  lastName: String
+  email: String
+  phone: String
+  company: String
+  taxId: String
+  notes: String
+  addresses: AddressRelateToManyForUpdateInput
+  orders: OrderRelateToManyForUpdateInput
+  tags: TagRelateToManyForUpdateInput
+  createdAt: DateTime
+}
+
+input AddressRelateToManyForUpdateInput {
+  disconnect: [AddressWhereUniqueInput!]
+  set: [AddressWhereUniqueInput!]
+  create: [AddressCreateInput!]
+  connect: [AddressWhereUniqueInput!]
+}
+
+input CustomerUpdateArgs {
+  where: CustomerWhereUniqueInput!
+  data: CustomerUpdateInput!
+}
+
+input CustomerCreateInput {
+  firstName: String
+  lastName: String
+  email: String
+  phone: String
+  company: String
+  taxId: String
+  notes: String
+  addresses: AddressRelateToManyForCreateInput
+  orders: OrderRelateToManyForCreateInput
+  tags: TagRelateToManyForCreateInput
+  createdAt: DateTime
+}
+
+input AddressRelateToManyForCreateInput {
+  create: [AddressCreateInput!]
+  connect: [AddressWhereUniqueInput!]
+}
+
+type Address {
+  id: ID!
+  addressLine1: String
+  addressLine2: String
+  city: String
+  state: String
+  postalCode: String
+  country: String
+  isDefault: Boolean
+  addressType: AddressAddressTypeType
+  customer: Customer
+  shippingOrders(where: OrderWhereInput! = {}, orderBy: [OrderOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: OrderWhereUniqueInput): [Order!]
+  shippingOrdersCount(where: OrderWhereInput! = {}): Int
+  billingOrders(where: OrderWhereInput! = {}, orderBy: [OrderOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: OrderWhereUniqueInput): [Order!]
+  billingOrdersCount(where: OrderWhereInput! = {}): Int
+}
+
+enum AddressAddressTypeType {
+  shipping
+  billing
+  both
+}
+
+input AddressWhereUniqueInput {
+  id: ID
+}
+
+input AddressWhereInput {
+  AND: [AddressWhereInput!]
+  OR: [AddressWhereInput!]
+  NOT: [AddressWhereInput!]
+  id: IDFilter
+  addressLine1: StringFilter
+  addressLine2: StringFilter
+  city: StringFilter
+  state: StringFilter
+  postalCode: StringFilter
+  country: StringFilter
+  isDefault: BooleanFilter
+  addressType: AddressAddressTypeTypeNullableFilter
+  customer: CustomerWhereInput
+  shippingOrders: OrderManyRelationFilter
+  billingOrders: OrderManyRelationFilter
+}
+
+input AddressAddressTypeTypeNullableFilter {
+  equals: AddressAddressTypeType
+  in: [AddressAddressTypeType!]
+  notIn: [AddressAddressTypeType!]
+  not: AddressAddressTypeTypeNullableFilter
+}
+
+input AddressOrderByInput {
+  id: OrderDirection
+  addressLine1: OrderDirection
+  addressLine2: OrderDirection
+  city: OrderDirection
+  state: OrderDirection
+  postalCode: OrderDirection
+  country: OrderDirection
+  isDefault: OrderDirection
+  addressType: OrderDirection
+}
+
+input AddressUpdateInput {
+  addressLine1: String
+  addressLine2: String
+  city: String
+  state: String
+  postalCode: String
+  country: String
+  isDefault: Boolean
+  addressType: AddressAddressTypeType
+  customer: CustomerRelateToOneForUpdateInput
+  shippingOrders: OrderRelateToManyForUpdateInput
+  billingOrders: OrderRelateToManyForUpdateInput
+}
+
+input AddressUpdateArgs {
+  where: AddressWhereUniqueInput!
+  data: AddressUpdateInput!
+}
+
+input AddressCreateInput {
+  addressLine1: String
+  addressLine2: String
+  city: String
+  state: String
+  postalCode: String
+  country: String
+  isDefault: Boolean
+  addressType: AddressAddressTypeType
+  customer: CustomerRelateToOneForCreateInput
+  shippingOrders: OrderRelateToManyForCreateInput
+  billingOrders: OrderRelateToManyForCreateInput
+}
+
+type Shipment {
+  id: ID!
+  shipmentId: String
+  order: Order
+  carrier: Carrier
+  trackingNumber: String
+  status: ShipmentStatusType
+  shippedDate: DateTime
+  deliveredDate: DateTime
+  packaging: Packaging
+  weight: Float
+  dimensions: JSON
+  shippingCost: Int
+  notes: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+enum ShipmentStatusType {
+  processing
+  ready_for_pickup
+  in_transit
+  delivered
+  failed
+  returned
+}
+
+input ShipmentWhereUniqueInput {
+  id: ID
+  shipmentId: String
+}
+
+input ShipmentWhereInput {
+  AND: [ShipmentWhereInput!]
+  OR: [ShipmentWhereInput!]
+  NOT: [ShipmentWhereInput!]
+  id: IDFilter
+  shipmentId: StringFilter
+  order: OrderWhereInput
+  carrier: CarrierWhereInput
+  trackingNumber: StringFilter
+  status: ShipmentStatusTypeNullableFilter
+  shippedDate: DateTimeNullableFilter
+  deliveredDate: DateTimeNullableFilter
+  packaging: PackagingWhereInput
+  weight: FloatNullableFilter
+  shippingCost: IntNullableFilter
+  notes: StringFilter
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+}
+
+input ShipmentStatusTypeNullableFilter {
+  equals: ShipmentStatusType
+  in: [ShipmentStatusType!]
+  notIn: [ShipmentStatusType!]
+  not: ShipmentStatusTypeNullableFilter
+}
+
+input ShipmentOrderByInput {
+  id: OrderDirection
+  shipmentId: OrderDirection
+  trackingNumber: OrderDirection
+  status: OrderDirection
+  shippedDate: OrderDirection
+  deliveredDate: OrderDirection
+  weight: OrderDirection
+  shippingCost: OrderDirection
+  notes: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input ShipmentUpdateInput {
+  shipmentId: String
+  order: OrderRelateToOneForUpdateInput
+  carrier: CarrierRelateToOneForUpdateInput
+  trackingNumber: String
+  status: ShipmentStatusType
+  shippedDate: DateTime
+  deliveredDate: DateTime
+  packaging: PackagingRelateToOneForUpdateInput
+  weight: Float
+  dimensions: JSON
+  shippingCost: Int
+  notes: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input CarrierRelateToOneForUpdateInput {
+  create: CarrierCreateInput
+  connect: CarrierWhereUniqueInput
+  disconnect: Boolean
+}
+
+input PackagingRelateToOneForUpdateInput {
+  create: PackagingCreateInput
+  connect: PackagingWhereUniqueInput
+  disconnect: Boolean
+}
+
+input ShipmentUpdateArgs {
+  where: ShipmentWhereUniqueInput!
+  data: ShipmentUpdateInput!
+}
+
+input ShipmentCreateInput {
+  shipmentId: String
+  order: OrderRelateToOneForCreateInput
+  carrier: CarrierRelateToOneForCreateInput
+  trackingNumber: String
+  status: ShipmentStatusType
+  shippedDate: DateTime
+  deliveredDate: DateTime
+  packaging: PackagingRelateToOneForCreateInput
+  weight: Float
+  dimensions: JSON
+  shippingCost: Int
+  notes: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input CarrierRelateToOneForCreateInput {
+  create: CarrierCreateInput
+  connect: CarrierWhereUniqueInput
+}
+
+input PackagingRelateToOneForCreateInput {
+  create: PackagingCreateInput
+  connect: PackagingWhereUniqueInput
+}
+
+type Carrier {
+  id: ID!
+  name: String
+  accountNumber: String
+  isActive: Boolean
+  trackingUrlTemplate: String
+  rateType: CarrierRateTypeType
+  shipments(where: ShipmentWhereInput! = {}, orderBy: [ShipmentOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ShipmentWhereUniqueInput): [Shipment!]
+  shipmentsCount(where: ShipmentWhereInput! = {}): Int
+  settings: JSON
+}
+
+enum CarrierRateTypeType {
+  standard
+  negotiated
+  commercial_plus
+}
+
+input CarrierWhereUniqueInput {
+  id: ID
+}
+
+input CarrierWhereInput {
+  AND: [CarrierWhereInput!]
+  OR: [CarrierWhereInput!]
+  NOT: [CarrierWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  accountNumber: StringFilter
+  isActive: BooleanFilter
+  trackingUrlTemplate: StringFilter
+  rateType: CarrierRateTypeTypeNullableFilter
+  shipments: ShipmentManyRelationFilter
+}
+
+input CarrierRateTypeTypeNullableFilter {
+  equals: CarrierRateTypeType
+  in: [CarrierRateTypeType!]
+  notIn: [CarrierRateTypeType!]
+  not: CarrierRateTypeTypeNullableFilter
+}
+
+input ShipmentManyRelationFilter {
+  every: ShipmentWhereInput
+  some: ShipmentWhereInput
+  none: ShipmentWhereInput
+}
+
+input CarrierOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  accountNumber: OrderDirection
+  isActive: OrderDirection
+  trackingUrlTemplate: OrderDirection
+  rateType: OrderDirection
+}
+
+input CarrierUpdateInput {
+  name: String
+  accountNumber: String
+  isActive: Boolean
+  trackingUrlTemplate: String
+  rateType: CarrierRateTypeType
+  shipments: ShipmentRelateToManyForUpdateInput
+  settings: JSON
+}
+
+input ShipmentRelateToManyForUpdateInput {
+  disconnect: [ShipmentWhereUniqueInput!]
+  set: [ShipmentWhereUniqueInput!]
+  create: [ShipmentCreateInput!]
+  connect: [ShipmentWhereUniqueInput!]
+}
+
+input CarrierUpdateArgs {
+  where: CarrierWhereUniqueInput!
+  data: CarrierUpdateInput!
+}
+
+input CarrierCreateInput {
+  name: String
+  accountNumber: String
+  isActive: Boolean
+  trackingUrlTemplate: String
+  rateType: CarrierRateTypeType
+  shipments: ShipmentRelateToManyForCreateInput
+  settings: JSON
+}
+
+input ShipmentRelateToManyForCreateInput {
+  create: [ShipmentCreateInput!]
+  connect: [ShipmentWhereUniqueInput!]
+}
+
+type Packaging {
+  id: ID!
+  name: String
+  dimensions: String
+  weight: Float
+  isActive: Boolean
+  shipments(where: ShipmentWhereInput! = {}, orderBy: [ShipmentOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ShipmentWhereUniqueInput): [Shipment!]
+  shipmentsCount(where: ShipmentWhereInput! = {}): Int
+}
+
+input PackagingWhereUniqueInput {
+  id: ID
+}
+
+input PackagingWhereInput {
+  AND: [PackagingWhereInput!]
+  OR: [PackagingWhereInput!]
+  NOT: [PackagingWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  dimensions: StringFilter
+  weight: FloatNullableFilter
+  isActive: BooleanFilter
+  shipments: ShipmentManyRelationFilter
+}
+
+input PackagingOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  dimensions: OrderDirection
+  weight: OrderDirection
+  isActive: OrderDirection
+}
+
+input PackagingUpdateInput {
+  name: String
+  dimensions: String
+  weight: Float
+  isActive: Boolean
+  shipments: ShipmentRelateToManyForUpdateInput
+}
+
+input PackagingUpdateArgs {
+  where: PackagingWhereUniqueInput!
+  data: PackagingUpdateInput!
+}
+
+input PackagingCreateInput {
+  name: String
+  dimensions: String
+  weight: Float
+  isActive: Boolean
+  shipments: ShipmentRelateToManyForCreateInput
+}
+
+type WarehouseLocation {
+  id: ID!
+  name: String
+  address: String
+  status: WarehouseLocationStatusType
+  sections(where: WarehouseSectionWhereInput! = {}, orderBy: [WarehouseSectionOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: WarehouseSectionWhereUniqueInput): [WarehouseSection!]
+  sectionsCount(where: WarehouseSectionWhereInput! = {}): Int
+  inventory(where: InventoryItemWhereInput! = {}, orderBy: [InventoryItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InventoryItemWhereUniqueInput): [InventoryItem!]
+  inventoryCount(where: InventoryItemWhereInput! = {}): Int
+  materialInventory(where: MaterialInventoryWhereInput! = {}, orderBy: [MaterialInventoryOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: MaterialInventoryWhereUniqueInput): [MaterialInventory!]
+  materialInventoryCount(where: MaterialInventoryWhereInput! = {}): Int
+  staff(where: UserWhereInput! = {}, orderBy: [UserOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UserWhereUniqueInput): [User!]
+  staffCount(where: UserWhereInput! = {}): Int
+  outgoingTransfers(where: InventoryTransferWhereInput! = {}, orderBy: [InventoryTransferOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InventoryTransferWhereUniqueInput): [InventoryTransfer!]
+  outgoingTransfersCount(where: InventoryTransferWhereInput! = {}): Int
+  incomingTransfers(where: InventoryTransferWhereInput! = {}, orderBy: [InventoryTransferOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InventoryTransferWhereUniqueInput): [InventoryTransfer!]
+  incomingTransfersCount(where: InventoryTransferWhereInput! = {}): Int
+}
+
+enum WarehouseLocationStatusType {
+  active
+  maintenance
+  inactive
+}
+
+input WarehouseLocationWhereUniqueInput {
+  id: ID
+}
+
+input WarehouseLocationWhereInput {
+  AND: [WarehouseLocationWhereInput!]
+  OR: [WarehouseLocationWhereInput!]
+  NOT: [WarehouseLocationWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  address: StringFilter
+  status: WarehouseLocationStatusTypeNullableFilter
+  sections: WarehouseSectionManyRelationFilter
+  inventory: InventoryItemManyRelationFilter
+  materialInventory: MaterialInventoryManyRelationFilter
+  staff: UserManyRelationFilter
+  outgoingTransfers: InventoryTransferManyRelationFilter
+  incomingTransfers: InventoryTransferManyRelationFilter
+}
+
+input WarehouseLocationStatusTypeNullableFilter {
+  equals: WarehouseLocationStatusType
+  in: [WarehouseLocationStatusType!]
+  notIn: [WarehouseLocationStatusType!]
+  not: WarehouseLocationStatusTypeNullableFilter
+}
+
+input WarehouseSectionManyRelationFilter {
+  every: WarehouseSectionWhereInput
+  some: WarehouseSectionWhereInput
+  none: WarehouseSectionWhereInput
+}
+
+input WarehouseLocationOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  address: OrderDirection
+  status: OrderDirection
+}
+
+input WarehouseLocationUpdateInput {
+  name: String
+  address: String
+  status: WarehouseLocationStatusType
+  sections: WarehouseSectionRelateToManyForUpdateInput
+  inventory: InventoryItemRelateToManyForUpdateInput
+  materialInventory: MaterialInventoryRelateToManyForUpdateInput
+  staff: UserRelateToManyForUpdateInput
+  outgoingTransfers: InventoryTransferRelateToManyForUpdateInput
+  incomingTransfers: InventoryTransferRelateToManyForUpdateInput
+}
+
+input WarehouseSectionRelateToManyForUpdateInput {
+  disconnect: [WarehouseSectionWhereUniqueInput!]
+  set: [WarehouseSectionWhereUniqueInput!]
+  create: [WarehouseSectionCreateInput!]
+  connect: [WarehouseSectionWhereUniqueInput!]
+}
+
+input WarehouseLocationUpdateArgs {
+  where: WarehouseLocationWhereUniqueInput!
+  data: WarehouseLocationUpdateInput!
+}
+
+input WarehouseLocationCreateInput {
+  name: String
+  address: String
+  status: WarehouseLocationStatusType
+  sections: WarehouseSectionRelateToManyForCreateInput
+  inventory: InventoryItemRelateToManyForCreateInput
+  materialInventory: MaterialInventoryRelateToManyForCreateInput
+  staff: UserRelateToManyForCreateInput
+  outgoingTransfers: InventoryTransferRelateToManyForCreateInput
+  incomingTransfers: InventoryTransferRelateToManyForCreateInput
+}
+
+input WarehouseSectionRelateToManyForCreateInput {
+  create: [WarehouseSectionCreateInput!]
+  connect: [WarehouseSectionWhereUniqueInput!]
+}
+
+type WarehouseSection {
+  id: ID!
+  name: String
+  warehouse: WarehouseLocation
+  type: WarehouseSectionTypeType
+  capacity: Int
+  inventory(where: InventoryItemWhereInput! = {}, orderBy: [InventoryItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InventoryItemWhereUniqueInput): [InventoryItem!]
+  inventoryCount(where: InventoryItemWhereInput! = {}): Int
+  materialInventory(where: MaterialInventoryWhereInput! = {}, orderBy: [MaterialInventoryOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: MaterialInventoryWhereUniqueInput): [MaterialInventory!]
+  materialInventoryCount(where: MaterialInventoryWhereInput! = {}): Int
+}
+
+enum WarehouseSectionTypeType {
+  raw_materials
+  finished_products
+  packaging
+  seasonal
+  mixed
+}
+
+input WarehouseSectionWhereUniqueInput {
+  id: ID
+}
+
+input WarehouseSectionWhereInput {
+  AND: [WarehouseSectionWhereInput!]
+  OR: [WarehouseSectionWhereInput!]
+  NOT: [WarehouseSectionWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  warehouse: WarehouseLocationWhereInput
+  type: WarehouseSectionTypeTypeNullableFilter
+  capacity: IntNullableFilter
+  inventory: InventoryItemManyRelationFilter
+  materialInventory: MaterialInventoryManyRelationFilter
+}
+
+input WarehouseSectionTypeTypeNullableFilter {
+  equals: WarehouseSectionTypeType
+  in: [WarehouseSectionTypeType!]
+  notIn: [WarehouseSectionTypeType!]
+  not: WarehouseSectionTypeTypeNullableFilter
+}
+
+input WarehouseSectionOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  type: OrderDirection
+  capacity: OrderDirection
+}
+
+input WarehouseSectionUpdateInput {
+  name: String
+  warehouse: WarehouseLocationRelateToOneForUpdateInput
+  type: WarehouseSectionTypeType
+  capacity: Int
+  inventory: InventoryItemRelateToManyForUpdateInput
+  materialInventory: MaterialInventoryRelateToManyForUpdateInput
+}
+
+input WarehouseSectionUpdateArgs {
+  where: WarehouseSectionWhereUniqueInput!
+  data: WarehouseSectionUpdateInput!
+}
+
+input WarehouseSectionCreateInput {
+  name: String
+  warehouse: WarehouseLocationRelateToOneForCreateInput
+  type: WarehouseSectionTypeType
+  capacity: Int
+  inventory: InventoryItemRelateToManyForCreateInput
+  materialInventory: MaterialInventoryRelateToManyForCreateInput
+}
+
+type InventoryTransfer {
+  id: ID!
+  transferId: String
+  fromLocation: WarehouseLocation
+  toLocation: WarehouseLocation
+  items(where: InventoryItemWhereInput! = {}, orderBy: [InventoryItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InventoryItemWhereUniqueInput): [InventoryItem!]
+  itemsCount(where: InventoryItemWhereInput! = {}): Int
+  status: InventoryTransferStatusType
+  initiatedBy: User
+  initiatedDate: DateTime
+  completedDate: DateTime
+  notes: String
+}
+
+enum InventoryTransferStatusType {
+  pending
+  in_transit
+  completed
+  cancelled
+}
+
+input InventoryTransferWhereUniqueInput {
+  id: ID
+  transferId: String
+}
+
+input InventoryTransferWhereInput {
+  AND: [InventoryTransferWhereInput!]
+  OR: [InventoryTransferWhereInput!]
+  NOT: [InventoryTransferWhereInput!]
+  id: IDFilter
+  transferId: StringFilter
+  fromLocation: WarehouseLocationWhereInput
+  toLocation: WarehouseLocationWhereInput
+  items: InventoryItemManyRelationFilter
+  status: InventoryTransferStatusTypeNullableFilter
+  initiatedBy: UserWhereInput
+  initiatedDate: DateTimeNullableFilter
+  completedDate: DateTimeNullableFilter
+  notes: StringFilter
+}
+
+input InventoryTransferStatusTypeNullableFilter {
+  equals: InventoryTransferStatusType
+  in: [InventoryTransferStatusType!]
+  notIn: [InventoryTransferStatusType!]
+  not: InventoryTransferStatusTypeNullableFilter
+}
+
+input InventoryTransferOrderByInput {
+  id: OrderDirection
+  transferId: OrderDirection
+  status: OrderDirection
+  initiatedDate: OrderDirection
+  completedDate: OrderDirection
+  notes: OrderDirection
+}
+
+input InventoryTransferUpdateInput {
+  transferId: String
+  fromLocation: WarehouseLocationRelateToOneForUpdateInput
+  toLocation: WarehouseLocationRelateToOneForUpdateInput
+  items: InventoryItemRelateToManyForUpdateInput
+  status: InventoryTransferStatusType
+  initiatedBy: UserRelateToOneForUpdateInput
+  initiatedDate: DateTime
+  completedDate: DateTime
+  notes: String
+}
+
+input InventoryTransferUpdateArgs {
+  where: InventoryTransferWhereUniqueInput!
+  data: InventoryTransferUpdateInput!
+}
+
+input InventoryTransferCreateInput {
+  transferId: String
+  fromLocation: WarehouseLocationRelateToOneForCreateInput
+  toLocation: WarehouseLocationRelateToOneForCreateInput
+  items: InventoryItemRelateToManyForCreateInput
+  status: InventoryTransferStatusType
+  initiatedBy: UserRelateToOneForCreateInput
+  initiatedDate: DateTime
+  completedDate: DateTime
+  notes: String
+}
+
+type RetailLocation {
+  id: ID!
+  name: String
+  address: String
+  manager: User
+  status: RetailLocationStatusType
+  staff(where: UserWhereInput! = {}, orderBy: [UserOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UserWhereUniqueInput): [User!]
+  staffCount(where: UserWhereInput! = {}): Int
+  orders(where: OrderWhereInput! = {}, orderBy: [OrderOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: OrderWhereUniqueInput): [Order!]
+  ordersCount(where: OrderWhereInput! = {}): Int
+  posTerminals(where: POSTerminalWhereInput! = {}, orderBy: [POSTerminalOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: POSTerminalWhereUniqueInput): [POSTerminal!]
+  posTerminalsCount(where: POSTerminalWhereInput! = {}): Int
+}
+
+enum RetailLocationStatusType {
+  active
+  maintenance
+  inactive
+}
+
+input RetailLocationWhereUniqueInput {
+  id: ID
+}
+
+input RetailLocationWhereInput {
+  AND: [RetailLocationWhereInput!]
+  OR: [RetailLocationWhereInput!]
+  NOT: [RetailLocationWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  address: StringFilter
+  manager: UserWhereInput
+  status: RetailLocationStatusTypeNullableFilter
+  staff: UserManyRelationFilter
+  orders: OrderManyRelationFilter
+  posTerminals: POSTerminalManyRelationFilter
+}
+
+input RetailLocationStatusTypeNullableFilter {
+  equals: RetailLocationStatusType
+  in: [RetailLocationStatusType!]
+  notIn: [RetailLocationStatusType!]
+  not: RetailLocationStatusTypeNullableFilter
+}
+
+input POSTerminalManyRelationFilter {
+  every: POSTerminalWhereInput
+  some: POSTerminalWhereInput
+  none: POSTerminalWhereInput
+}
+
+input RetailLocationOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  address: OrderDirection
+  status: OrderDirection
+}
+
+input RetailLocationUpdateInput {
+  name: String
+  address: String
+  manager: UserRelateToOneForUpdateInput
+  status: RetailLocationStatusType
+  staff: UserRelateToManyForUpdateInput
+  orders: OrderRelateToManyForUpdateInput
+  posTerminals: POSTerminalRelateToManyForUpdateInput
+}
+
+input POSTerminalRelateToManyForUpdateInput {
+  disconnect: [POSTerminalWhereUniqueInput!]
+  set: [POSTerminalWhereUniqueInput!]
+  create: [POSTerminalCreateInput!]
+  connect: [POSTerminalWhereUniqueInput!]
+}
+
+input RetailLocationUpdateArgs {
+  where: RetailLocationWhereUniqueInput!
+  data: RetailLocationUpdateInput!
+}
+
+input RetailLocationCreateInput {
+  name: String
+  address: String
+  manager: UserRelateToOneForCreateInput
+  status: RetailLocationStatusType
+  staff: UserRelateToManyForCreateInput
+  orders: OrderRelateToManyForCreateInput
+  posTerminals: POSTerminalRelateToManyForCreateInput
+}
+
+input POSTerminalRelateToManyForCreateInput {
+  create: [POSTerminalCreateInput!]
+  connect: [POSTerminalWhereUniqueInput!]
+}
+
+type POSTerminal {
+  id: ID!
+  terminalId: String
+  location: RetailLocation
+  status: POSTerminalStatusType
+  lastSync: DateTime
+  settings: JSON
+}
+
+enum POSTerminalStatusType {
+  connected
+  disconnected
+  maintenance
+}
+
+input POSTerminalWhereUniqueInput {
+  id: ID
+  terminalId: String
+}
+
+input POSTerminalWhereInput {
+  AND: [POSTerminalWhereInput!]
+  OR: [POSTerminalWhereInput!]
+  NOT: [POSTerminalWhereInput!]
+  id: IDFilter
+  terminalId: StringFilter
+  location: RetailLocationWhereInput
+  status: POSTerminalStatusTypeNullableFilter
+  lastSync: DateTimeNullableFilter
+}
+
+input POSTerminalStatusTypeNullableFilter {
+  equals: POSTerminalStatusType
+  in: [POSTerminalStatusType!]
+  notIn: [POSTerminalStatusType!]
+  not: POSTerminalStatusTypeNullableFilter
+}
+
+input POSTerminalOrderByInput {
+  id: OrderDirection
+  terminalId: OrderDirection
+  status: OrderDirection
+  lastSync: OrderDirection
+}
+
+input POSTerminalUpdateInput {
+  terminalId: String
+  location: RetailLocationRelateToOneForUpdateInput
+  status: POSTerminalStatusType
+  lastSync: DateTime
+  settings: JSON
+}
+
+input POSTerminalUpdateArgs {
+  where: POSTerminalWhereUniqueInput!
+  data: POSTerminalUpdateInput!
+}
+
+input POSTerminalCreateInput {
+  terminalId: String
+  location: RetailLocationRelateToOneForCreateInput
+  status: POSTerminalStatusType
+  lastSync: DateTime
+  settings: JSON
+}
+
+type Promotion {
+  id: ID!
+  name: String
+  description: String
+  discountType: PromotionDiscountTypeType
+  discountValue: Int
+  discountCode: String
+  startDate: DateTime
+  endDate: DateTime
+  status: PromotionStatusType
+  minimumPurchase: Int
+  usageLimit: Int
+  usageCount: Int
+  applicableProducts(where: ProductWhereInput! = {}, orderBy: [ProductOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProductWhereUniqueInput): [Product!]
+  applicableProductsCount(where: ProductWhereInput! = {}): Int
+  applicableCategories(where: CategoryWhereInput! = {}, orderBy: [CategoryOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: CategoryWhereUniqueInput): [Category!]
+  applicableCategoriesCount(where: CategoryWhereInput! = {}): Int
+  createdBy: User
+  createdAt: DateTime
+}
+
+enum PromotionDiscountTypeType {
+  percentage
+  fixed
+  bxgy
+  free_shipping
+}
+
+enum PromotionStatusType {
+  active
+  upcoming
+  expired
+  cancelled
+}
+
+input PromotionWhereUniqueInput {
+  id: ID
+}
+
+input PromotionWhereInput {
+  AND: [PromotionWhereInput!]
+  OR: [PromotionWhereInput!]
+  NOT: [PromotionWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  description: StringFilter
+  discountType: PromotionDiscountTypeTypeNullableFilter
+  discountValue: IntNullableFilter
+  discountCode: StringFilter
+  startDate: DateTimeFilter
+  endDate: DateTimeFilter
+  status: PromotionStatusTypeNullableFilter
+  minimumPurchase: IntNullableFilter
+  usageLimit: IntNullableFilter
+  usageCount: IntNullableFilter
+  applicableProducts: ProductManyRelationFilter
+  applicableCategories: CategoryManyRelationFilter
+  createdBy: UserWhereInput
+  createdAt: DateTimeNullableFilter
+}
+
+input PromotionDiscountTypeTypeNullableFilter {
+  equals: PromotionDiscountTypeType
+  in: [PromotionDiscountTypeType!]
+  notIn: [PromotionDiscountTypeType!]
+  not: PromotionDiscountTypeTypeNullableFilter
+}
+
+input DateTimeFilter {
+  equals: DateTime
+  in: [DateTime!]
+  notIn: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  gt: DateTime
+  gte: DateTime
+  not: DateTimeFilter
+}
+
+input PromotionStatusTypeNullableFilter {
+  equals: PromotionStatusType
+  in: [PromotionStatusType!]
+  notIn: [PromotionStatusType!]
+  not: PromotionStatusTypeNullableFilter
+}
+
+input PromotionOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  description: OrderDirection
+  discountType: OrderDirection
+  discountValue: OrderDirection
+  discountCode: OrderDirection
+  startDate: OrderDirection
+  endDate: OrderDirection
+  status: OrderDirection
+  minimumPurchase: OrderDirection
+  usageLimit: OrderDirection
+  usageCount: OrderDirection
+  createdAt: OrderDirection
+}
+
+input PromotionUpdateInput {
+  name: String
+  description: String
+  discountType: PromotionDiscountTypeType
+  discountValue: Int
+  discountCode: String
+  startDate: DateTime
+  endDate: DateTime
+  status: PromotionStatusType
+  minimumPurchase: Int
+  usageLimit: Int
+  usageCount: Int
+  applicableProducts: ProductRelateToManyForUpdateInput
+  applicableCategories: CategoryRelateToManyForUpdateInput
+  createdBy: UserRelateToOneForUpdateInput
+  createdAt: DateTime
+}
+
+input PromotionUpdateArgs {
+  where: PromotionWhereUniqueInput!
+  data: PromotionUpdateInput!
+}
+
+input PromotionCreateInput {
+  name: String
+  description: String
+  discountType: PromotionDiscountTypeType
+  discountValue: Int
+  discountCode: String
+  startDate: DateTime
+  endDate: DateTime
+  status: PromotionStatusType
+  minimumPurchase: Int
+  usageLimit: Int
+  usageCount: Int
+  applicableProducts: ProductRelateToManyForCreateInput
+  applicableCategories: CategoryRelateToManyForCreateInput
+  createdBy: UserRelateToOneForCreateInput
+  createdAt: DateTime
+}
+
+type Supplier {
+  id: ID!
+  name: String
+  contactName: String
+  email: String
+  phone: String
+  website: String
+  address: String
+  notes: String
+  materials(where: MaterialWhereInput! = {}, orderBy: [MaterialOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: MaterialWhereUniqueInput): [Material!]
+  materialsCount(where: MaterialWhereInput! = {}): Int
+  isActive: Boolean
+  createdAt: DateTime
+}
+
+input SupplierWhereUniqueInput {
+  id: ID
+}
+
+input SupplierWhereInput {
+  AND: [SupplierWhereInput!]
+  OR: [SupplierWhereInput!]
+  NOT: [SupplierWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  contactName: StringFilter
+  email: StringFilter
+  phone: StringFilter
+  website: StringFilter
+  address: StringFilter
+  notes: StringFilter
+  materials: MaterialManyRelationFilter
+  isActive: BooleanFilter
+  createdAt: DateTimeNullableFilter
+}
+
+input SupplierOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  contactName: OrderDirection
+  email: OrderDirection
+  phone: OrderDirection
+  website: OrderDirection
+  address: OrderDirection
+  notes: OrderDirection
+  isActive: OrderDirection
+  createdAt: OrderDirection
+}
+
+input SupplierUpdateInput {
+  name: String
+  contactName: String
+  email: String
+  phone: String
+  website: String
+  address: String
+  notes: String
+  materials: MaterialRelateToManyForUpdateInput
+  isActive: Boolean
+  createdAt: DateTime
+}
+
+input SupplierUpdateArgs {
+  where: SupplierWhereUniqueInput!
+  data: SupplierUpdateInput!
+}
+
+input SupplierCreateInput {
+  name: String
+  contactName: String
+  email: String
+  phone: String
+  website: String
+  address: String
+  notes: String
+  materials: MaterialRelateToManyForCreateInput
+  isActive: Boolean
+  createdAt: DateTime
+}
+
+type Tag {
+  id: ID!
+  name: String
+  color: String
+  products(where: ProductWhereInput! = {}, orderBy: [ProductOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProductWhereUniqueInput): [Product!]
+  productsCount(where: ProductWhereInput! = {}): Int
+  materials(where: MaterialWhereInput! = {}, orderBy: [MaterialOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: MaterialWhereUniqueInput): [Material!]
+  materialsCount(where: MaterialWhereInput! = {}): Int
+  customers(where: CustomerWhereInput! = {}, orderBy: [CustomerOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: CustomerWhereUniqueInput): [Customer!]
+  customersCount(where: CustomerWhereInput! = {}): Int
+  orders(where: OrderWhereInput! = {}, orderBy: [OrderOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: OrderWhereUniqueInput): [Order!]
+  ordersCount(where: OrderWhereInput! = {}): Int
+  createdBy: User
+  createdAt: DateTime
+}
+
+input TagWhereUniqueInput {
+  id: ID
+  name: String
+}
+
+input TagWhereInput {
+  AND: [TagWhereInput!]
+  OR: [TagWhereInput!]
+  NOT: [TagWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  color: StringFilter
+  products: ProductManyRelationFilter
+  materials: MaterialManyRelationFilter
+  customers: CustomerManyRelationFilter
+  orders: OrderManyRelationFilter
+  createdBy: UserWhereInput
+  createdAt: DateTimeNullableFilter
+}
+
+input CustomerManyRelationFilter {
+  every: CustomerWhereInput
+  some: CustomerWhereInput
+  none: CustomerWhereInput
+}
+
+input TagOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  color: OrderDirection
+  createdAt: OrderDirection
+}
+
+input TagUpdateInput {
+  name: String
+  color: String
+  products: ProductRelateToManyForUpdateInput
+  materials: MaterialRelateToManyForUpdateInput
+  customers: CustomerRelateToManyForUpdateInput
+  orders: OrderRelateToManyForUpdateInput
+  createdBy: UserRelateToOneForUpdateInput
+  createdAt: DateTime
+}
+
+input CustomerRelateToManyForUpdateInput {
+  disconnect: [CustomerWhereUniqueInput!]
+  set: [CustomerWhereUniqueInput!]
+  create: [CustomerCreateInput!]
+  connect: [CustomerWhereUniqueInput!]
+}
+
+input TagUpdateArgs {
+  where: TagWhereUniqueInput!
+  data: TagUpdateInput!
+}
+
+input TagCreateInput {
+  name: String
+  color: String
+  products: ProductRelateToManyForCreateInput
+  materials: MaterialRelateToManyForCreateInput
+  customers: CustomerRelateToManyForCreateInput
+  orders: OrderRelateToManyForCreateInput
+  createdBy: UserRelateToOneForCreateInput
+  createdAt: DateTime
+}
+
+input CustomerRelateToManyForCreateInput {
+  create: [CustomerCreateInput!]
+  connect: [CustomerWhereUniqueInput!]
+}
+
+type Category {
+  id: ID!
+  name: String
+  slug: String
+  description: String
+  parent: Category
+  children(where: CategoryWhereInput! = {}, orderBy: [CategoryOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: CategoryWhereUniqueInput): [Category!]
+  childrenCount(where: CategoryWhereInput! = {}): Int
+  products(where: ProductWhereInput! = {}, orderBy: [ProductOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProductWhereUniqueInput): [Product!]
+  productsCount(where: ProductWhereInput! = {}): Int
+  materials(where: MaterialWhereInput! = {}, orderBy: [MaterialOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: MaterialWhereUniqueInput): [Material!]
+  materialsCount(where: MaterialWhereInput! = {}): Int
+  image: String
+  isActive: Boolean
+}
+
+input CategoryWhereUniqueInput {
+  id: ID
+  slug: String
+}
+
+input CategoryWhereInput {
+  AND: [CategoryWhereInput!]
+  OR: [CategoryWhereInput!]
+  NOT: [CategoryWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  slug: StringFilter
+  description: StringFilter
+  parent: CategoryWhereInput
+  children: CategoryManyRelationFilter
+  products: ProductManyRelationFilter
+  materials: MaterialManyRelationFilter
+  image: StringFilter
+  isActive: BooleanFilter
+}
+
+input CategoryOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  slug: OrderDirection
+  description: OrderDirection
+  image: OrderDirection
+  isActive: OrderDirection
+}
+
+input CategoryUpdateInput {
+  name: String
+  slug: String
+  description: String
+  parent: CategoryRelateToOneForUpdateInput
+  children: CategoryRelateToManyForUpdateInput
+  products: ProductRelateToManyForUpdateInput
+  materials: MaterialRelateToManyForUpdateInput
+  image: String
+  isActive: Boolean
+}
+
+input CategoryUpdateArgs {
+  where: CategoryWhereUniqueInput!
+  data: CategoryUpdateInput!
+}
+
+input CategoryCreateInput {
+  name: String
+  slug: String
+  description: String
+  parent: CategoryRelateToOneForCreateInput
+  children: CategoryRelateToManyForCreateInput
+  products: ProductRelateToManyForCreateInput
+  materials: MaterialRelateToManyForCreateInput
+  image: String
+  isActive: Boolean
+}
+
+type Integration {
+  id: ID!
+  name: String
+  type: IntegrationTypeType
+  isActive: Boolean
+  credentials: JSON
+  settings: JSON
+  lastSync: DateTime
+  syncLogs(where: IntegrationSyncLogWhereInput! = {}, orderBy: [IntegrationSyncLogOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: IntegrationSyncLogWhereUniqueInput): [IntegrationSyncLog!]
+  syncLogsCount(where: IntegrationSyncLogWhereInput! = {}): Int
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+enum IntegrationTypeType {
+  shopify
+  etsy
+  woocommerce
+  square
+  lightspeed
+}
+
+input IntegrationWhereUniqueInput {
+  id: ID
+}
+
+input IntegrationWhereInput {
+  AND: [IntegrationWhereInput!]
+  OR: [IntegrationWhereInput!]
+  NOT: [IntegrationWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  type: IntegrationTypeTypeNullableFilter
+  isActive: BooleanFilter
+  lastSync: DateTimeNullableFilter
+  syncLogs: IntegrationSyncLogManyRelationFilter
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+}
+
+input IntegrationTypeTypeNullableFilter {
+  equals: IntegrationTypeType
+  in: [IntegrationTypeType!]
+  notIn: [IntegrationTypeType!]
+  not: IntegrationTypeTypeNullableFilter
+}
+
+input IntegrationSyncLogManyRelationFilter {
+  every: IntegrationSyncLogWhereInput
+  some: IntegrationSyncLogWhereInput
+  none: IntegrationSyncLogWhereInput
+}
+
+input IntegrationOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  type: OrderDirection
+  isActive: OrderDirection
+  lastSync: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input IntegrationUpdateInput {
+  name: String
+  type: IntegrationTypeType
+  isActive: Boolean
+  credentials: JSON
+  settings: JSON
+  lastSync: DateTime
+  syncLogs: IntegrationSyncLogRelateToManyForUpdateInput
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input IntegrationSyncLogRelateToManyForUpdateInput {
+  disconnect: [IntegrationSyncLogWhereUniqueInput!]
+  set: [IntegrationSyncLogWhereUniqueInput!]
+  create: [IntegrationSyncLogCreateInput!]
+  connect: [IntegrationSyncLogWhereUniqueInput!]
+}
+
+input IntegrationUpdateArgs {
+  where: IntegrationWhereUniqueInput!
+  data: IntegrationUpdateInput!
+}
+
+input IntegrationCreateInput {
+  name: String
+  type: IntegrationTypeType
+  isActive: Boolean
+  credentials: JSON
+  settings: JSON
+  lastSync: DateTime
+  syncLogs: IntegrationSyncLogRelateToManyForCreateInput
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input IntegrationSyncLogRelateToManyForCreateInput {
+  create: [IntegrationSyncLogCreateInput!]
+  connect: [IntegrationSyncLogWhereUniqueInput!]
+}
+
+type IntegrationSyncLog {
+  id: ID!
+  integration: Integration
+  syncType: IntegrationSyncLogSyncTypeType
+  status: IntegrationSyncLogStatusType
+  startTime: DateTime
+  endTime: DateTime
+  itemsProcessed: Int
+  itemsSucceeded: Int
+  itemsFailed: Int
+  errors: JSON
+  details: JSON
+}
+
+enum IntegrationSyncLogSyncTypeType {
+  products
+  orders
+  inventory
+  customers
+  full
+}
+
+enum IntegrationSyncLogStatusType {
+  success
+  partial
+  failed
+  in_progress
+}
+
+input IntegrationSyncLogWhereUniqueInput {
+  id: ID
+}
+
+input IntegrationSyncLogWhereInput {
+  AND: [IntegrationSyncLogWhereInput!]
+  OR: [IntegrationSyncLogWhereInput!]
+  NOT: [IntegrationSyncLogWhereInput!]
+  id: IDFilter
+  integration: IntegrationWhereInput
+  syncType: IntegrationSyncLogSyncTypeTypeNullableFilter
+  status: IntegrationSyncLogStatusTypeNullableFilter
+  startTime: DateTimeNullableFilter
+  endTime: DateTimeNullableFilter
+  itemsProcessed: IntNullableFilter
+  itemsSucceeded: IntNullableFilter
+  itemsFailed: IntNullableFilter
+}
+
+input IntegrationSyncLogSyncTypeTypeNullableFilter {
+  equals: IntegrationSyncLogSyncTypeType
+  in: [IntegrationSyncLogSyncTypeType!]
+  notIn: [IntegrationSyncLogSyncTypeType!]
+  not: IntegrationSyncLogSyncTypeTypeNullableFilter
+}
+
+input IntegrationSyncLogStatusTypeNullableFilter {
+  equals: IntegrationSyncLogStatusType
+  in: [IntegrationSyncLogStatusType!]
+  notIn: [IntegrationSyncLogStatusType!]
+  not: IntegrationSyncLogStatusTypeNullableFilter
+}
+
+input IntegrationSyncLogOrderByInput {
+  id: OrderDirection
+  syncType: OrderDirection
+  status: OrderDirection
+  startTime: OrderDirection
+  endTime: OrderDirection
+  itemsProcessed: OrderDirection
+  itemsSucceeded: OrderDirection
+  itemsFailed: OrderDirection
+}
+
+input IntegrationSyncLogUpdateInput {
+  integration: IntegrationRelateToOneForUpdateInput
+  syncType: IntegrationSyncLogSyncTypeType
+  status: IntegrationSyncLogStatusType
+  startTime: DateTime
+  endTime: DateTime
+  itemsProcessed: Int
+  itemsSucceeded: Int
+  itemsFailed: Int
+  errors: JSON
+  details: JSON
+}
+
+input IntegrationRelateToOneForUpdateInput {
+  create: IntegrationCreateInput
+  connect: IntegrationWhereUniqueInput
+  disconnect: Boolean
+}
+
+input IntegrationSyncLogUpdateArgs {
+  where: IntegrationSyncLogWhereUniqueInput!
+  data: IntegrationSyncLogUpdateInput!
+}
+
+input IntegrationSyncLogCreateInput {
+  integration: IntegrationRelateToOneForCreateInput
+  syncType: IntegrationSyncLogSyncTypeType
+  status: IntegrationSyncLogStatusType
+  startTime: DateTime
+  endTime: DateTime
+  itemsProcessed: Int
+  itemsSucceeded: Int
+  itemsFailed: Int
+  errors: JSON
+  details: JSON
+}
+
+input IntegrationRelateToOneForCreateInput {
+  create: IntegrationCreateInput
+  connect: IntegrationWhereUniqueInput
+}
+
+type Report {
+  id: ID!
+  name: String
+  description: String
+  type: ReportTypeType
+  parameters: JSON
+  schedule: JSON
+  lastRun: DateTime
+  createdBy: User
+  createdAt: DateTime
+  isPro: Boolean
+}
+
+enum ReportTypeType {
+  sales
+  inventory
+  products
+  customers
+  orders
+  custom
+}
+
+input ReportWhereUniqueInput {
+  id: ID
+}
+
+input ReportWhereInput {
+  AND: [ReportWhereInput!]
+  OR: [ReportWhereInput!]
+  NOT: [ReportWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  description: StringFilter
+  type: ReportTypeTypeNullableFilter
+  lastRun: DateTimeNullableFilter
+  createdBy: UserWhereInput
+  createdAt: DateTimeNullableFilter
+  isPro: BooleanFilter
+}
+
+input ReportTypeTypeNullableFilter {
+  equals: ReportTypeType
+  in: [ReportTypeType!]
+  notIn: [ReportTypeType!]
+  not: ReportTypeTypeNullableFilter
+}
+
+input ReportOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  description: OrderDirection
+  type: OrderDirection
+  lastRun: OrderDirection
+  createdAt: OrderDirection
+  isPro: OrderDirection
+}
+
+input ReportUpdateInput {
+  name: String
+  description: String
+  type: ReportTypeType
+  parameters: JSON
+  schedule: JSON
+  lastRun: DateTime
+  createdBy: UserRelateToOneForUpdateInput
+  createdAt: DateTime
+  isPro: Boolean
+}
+
+input ReportUpdateArgs {
+  where: ReportWhereUniqueInput!
+  data: ReportUpdateInput!
+}
+
+input ReportCreateInput {
+  name: String
+  description: String
+  type: ReportTypeType
+  parameters: JSON
+  schedule: JSON
+  lastRun: DateTime
+  createdBy: UserRelateToOneForCreateInput
+  createdAt: DateTime
+  isPro: Boolean
 }
 
 """
@@ -1162,60 +3381,180 @@ type Mutation {
   updateUsers(data: [UserUpdateArgs!]!): [User]
   deleteUser(where: UserWhereUniqueInput!): User
   deleteUsers(where: [UserWhereUniqueInput!]!): [User]
-  createCluster(data: ClusterCreateInput!): Cluster
-  createClusters(data: [ClusterCreateInput!]!): [Cluster]
-  updateCluster(where: ClusterWhereUniqueInput!, data: ClusterUpdateInput!): Cluster
-  updateClusters(data: [ClusterUpdateArgs!]!): [Cluster]
-  deleteCluster(where: ClusterWhereUniqueInput!): Cluster
-  deleteClusters(where: [ClusterWhereUniqueInput!]!): [Cluster]
-  createList(data: ListCreateInput!): List
-  createLists(data: [ListCreateInput!]!): [List]
-  updateList(where: ListWhereUniqueInput!, data: ListUpdateInput!): List
-  updateLists(data: [ListUpdateArgs!]!): [List]
-  deleteList(where: ListWhereUniqueInput!): List
-  deleteLists(where: [ListWhereUniqueInput!]!): [List]
+  createTeam(data: TeamCreateInput!): Team
+  createTeams(data: [TeamCreateInput!]!): [Team]
+  updateTeam(where: TeamWhereUniqueInput!, data: TeamUpdateInput!): Team
+  updateTeams(data: [TeamUpdateArgs!]!): [Team]
+  deleteTeam(where: TeamWhereUniqueInput!): Team
+  deleteTeams(where: [TeamWhereUniqueInput!]!): [Team]
   createProduct(data: ProductCreateInput!): Product
   createProducts(data: [ProductCreateInput!]!): [Product]
   updateProduct(where: ProductWhereUniqueInput!, data: ProductUpdateInput!): Product
   updateProducts(data: [ProductUpdateArgs!]!): [Product]
   deleteProduct(where: ProductWhereUniqueInput!): Product
   deleteProducts(where: [ProductWhereUniqueInput!]!): [Product]
-  createInventory(data: InventoryCreateInput!): Inventory
-  createInventories(data: [InventoryCreateInput!]!): [Inventory]
-  updateInventory(where: InventoryWhereUniqueInput!, data: InventoryUpdateInput!): Inventory
-  updateInventories(data: [InventoryUpdateArgs!]!): [Inventory]
-  deleteInventory(where: InventoryWhereUniqueInput!): Inventory
-  deleteInventories(where: [InventoryWhereUniqueInput!]!): [Inventory]
-  createInvitation(data: InvitationCreateInput!): Invitation
-  createInvitations(data: [InvitationCreateInput!]!): [Invitation]
-  updateInvitation(where: InvitationWhereUniqueInput!, data: InvitationUpdateInput!): Invitation
-  updateInvitations(data: [InvitationUpdateArgs!]!): [Invitation]
-  deleteInvitation(where: InvitationWhereUniqueInput!): Invitation
-  deleteInvitations(where: [InvitationWhereUniqueInput!]!): [Invitation]
+  createProductVariant(data: ProductVariantCreateInput!): ProductVariant
+  createProductVariants(data: [ProductVariantCreateInput!]!): [ProductVariant]
+  updateProductVariant(where: ProductVariantWhereUniqueInput!, data: ProductVariantUpdateInput!): ProductVariant
+  updateProductVariants(data: [ProductVariantUpdateArgs!]!): [ProductVariant]
+  deleteProductVariant(where: ProductVariantWhereUniqueInput!): ProductVariant
+  deleteProductVariants(where: [ProductVariantWhereUniqueInput!]!): [ProductVariant]
+  createProductImage(data: ProductImageCreateInput!): ProductImage
+  createProductImages(data: [ProductImageCreateInput!]!): [ProductImage]
+  updateProductImage(where: ProductImageWhereUniqueInput!, data: ProductImageUpdateInput!): ProductImage
+  updateProductImages(data: [ProductImageUpdateArgs!]!): [ProductImage]
+  deleteProductImage(where: ProductImageWhereUniqueInput!): ProductImage
+  deleteProductImages(where: [ProductImageWhereUniqueInput!]!): [ProductImage]
+  createInventoryItem(data: InventoryItemCreateInput!): InventoryItem
+  createInventoryItems(data: [InventoryItemCreateInput!]!): [InventoryItem]
+  updateInventoryItem(where: InventoryItemWhereUniqueInput!, data: InventoryItemUpdateInput!): InventoryItem
+  updateInventoryItems(data: [InventoryItemUpdateArgs!]!): [InventoryItem]
+  deleteInventoryItem(where: InventoryItemWhereUniqueInput!): InventoryItem
+  deleteInventoryItems(where: [InventoryItemWhereUniqueInput!]!): [InventoryItem]
+  createInventoryAdjustment(data: InventoryAdjustmentCreateInput!): InventoryAdjustment
+  createInventoryAdjustments(data: [InventoryAdjustmentCreateInput!]!): [InventoryAdjustment]
+  updateInventoryAdjustment(where: InventoryAdjustmentWhereUniqueInput!, data: InventoryAdjustmentUpdateInput!): InventoryAdjustment
+  updateInventoryAdjustments(data: [InventoryAdjustmentUpdateArgs!]!): [InventoryAdjustment]
+  deleteInventoryAdjustment(where: InventoryAdjustmentWhereUniqueInput!): InventoryAdjustment
+  deleteInventoryAdjustments(where: [InventoryAdjustmentWhereUniqueInput!]!): [InventoryAdjustment]
+  createMaterial(data: MaterialCreateInput!): Material
+  createMaterials(data: [MaterialCreateInput!]!): [Material]
+  updateMaterial(where: MaterialWhereUniqueInput!, data: MaterialUpdateInput!): Material
+  updateMaterials(data: [MaterialUpdateArgs!]!): [Material]
+  deleteMaterial(where: MaterialWhereUniqueInput!): Material
+  deleteMaterials(where: [MaterialWhereUniqueInput!]!): [Material]
+  createMaterialInventory(data: MaterialInventoryCreateInput!): MaterialInventory
+  createMaterialInventories(data: [MaterialInventoryCreateInput!]!): [MaterialInventory]
+  updateMaterialInventory(where: MaterialInventoryWhereUniqueInput!, data: MaterialInventoryUpdateInput!): MaterialInventory
+  updateMaterialInventories(data: [MaterialInventoryUpdateArgs!]!): [MaterialInventory]
+  deleteMaterialInventory(where: MaterialInventoryWhereUniqueInput!): MaterialInventory
+  deleteMaterialInventories(where: [MaterialInventoryWhereUniqueInput!]!): [MaterialInventory]
+  createMaterialAdjustment(data: MaterialAdjustmentCreateInput!): MaterialAdjustment
+  createMaterialAdjustments(data: [MaterialAdjustmentCreateInput!]!): [MaterialAdjustment]
+  updateMaterialAdjustment(where: MaterialAdjustmentWhereUniqueInput!, data: MaterialAdjustmentUpdateInput!): MaterialAdjustment
+  updateMaterialAdjustments(data: [MaterialAdjustmentUpdateArgs!]!): [MaterialAdjustment]
+  deleteMaterialAdjustment(where: MaterialAdjustmentWhereUniqueInput!): MaterialAdjustment
+  deleteMaterialAdjustments(where: [MaterialAdjustmentWhereUniqueInput!]!): [MaterialAdjustment]
+  createBillOfMaterial(data: BillOfMaterialCreateInput!): BillOfMaterial
+  createBillOfMaterials(data: [BillOfMaterialCreateInput!]!): [BillOfMaterial]
+  updateBillOfMaterial(where: BillOfMaterialWhereUniqueInput!, data: BillOfMaterialUpdateInput!): BillOfMaterial
+  updateBillOfMaterials(data: [BillOfMaterialUpdateArgs!]!): [BillOfMaterial]
+  deleteBillOfMaterial(where: BillOfMaterialWhereUniqueInput!): BillOfMaterial
+  deleteBillOfMaterials(where: [BillOfMaterialWhereUniqueInput!]!): [BillOfMaterial]
   createOrder(data: OrderCreateInput!): Order
   createOrders(data: [OrderCreateInput!]!): [Order]
   updateOrder(where: OrderWhereUniqueInput!, data: OrderUpdateInput!): Order
   updateOrders(data: [OrderUpdateArgs!]!): [Order]
   deleteOrder(where: OrderWhereUniqueInput!): Order
   deleteOrders(where: [OrderWhereUniqueInput!]!): [Order]
-  createIntegration(data: IntegrationCreateInput!): Integration
-  createIntegrations(data: [IntegrationCreateInput!]!): [Integration]
-  updateIntegration(where: IntegrationWhereUniqueInput!, data: IntegrationUpdateInput!): Integration
-  updateIntegrations(data: [IntegrationUpdateArgs!]!): [Integration]
-  deleteIntegration(where: IntegrationWhereUniqueInput!): Integration
-  deleteIntegrations(where: [IntegrationWhereUniqueInput!]!): [Integration]
+  createOrderItem(data: OrderItemCreateInput!): OrderItem
+  createOrderItems(data: [OrderItemCreateInput!]!): [OrderItem]
+  updateOrderItem(where: OrderItemWhereUniqueInput!, data: OrderItemUpdateInput!): OrderItem
+  updateOrderItems(data: [OrderItemUpdateArgs!]!): [OrderItem]
+  deleteOrderItem(where: OrderItemWhereUniqueInput!): OrderItem
+  deleteOrderItems(where: [OrderItemWhereUniqueInput!]!): [OrderItem]
+  createCustomer(data: CustomerCreateInput!): Customer
+  createCustomers(data: [CustomerCreateInput!]!): [Customer]
+  updateCustomer(where: CustomerWhereUniqueInput!, data: CustomerUpdateInput!): Customer
+  updateCustomers(data: [CustomerUpdateArgs!]!): [Customer]
+  deleteCustomer(where: CustomerWhereUniqueInput!): Customer
+  deleteCustomers(where: [CustomerWhereUniqueInput!]!): [Customer]
+  createAddress(data: AddressCreateInput!): Address
+  createAddresses(data: [AddressCreateInput!]!): [Address]
+  updateAddress(where: AddressWhereUniqueInput!, data: AddressUpdateInput!): Address
+  updateAddresses(data: [AddressUpdateArgs!]!): [Address]
+  deleteAddress(where: AddressWhereUniqueInput!): Address
+  deleteAddresses(where: [AddressWhereUniqueInput!]!): [Address]
+  createShipment(data: ShipmentCreateInput!): Shipment
+  createShipments(data: [ShipmentCreateInput!]!): [Shipment]
+  updateShipment(where: ShipmentWhereUniqueInput!, data: ShipmentUpdateInput!): Shipment
+  updateShipments(data: [ShipmentUpdateArgs!]!): [Shipment]
+  deleteShipment(where: ShipmentWhereUniqueInput!): Shipment
+  deleteShipments(where: [ShipmentWhereUniqueInput!]!): [Shipment]
+  createCarrier(data: CarrierCreateInput!): Carrier
+  createCarriers(data: [CarrierCreateInput!]!): [Carrier]
+  updateCarrier(where: CarrierWhereUniqueInput!, data: CarrierUpdateInput!): Carrier
+  updateCarriers(data: [CarrierUpdateArgs!]!): [Carrier]
+  deleteCarrier(where: CarrierWhereUniqueInput!): Carrier
+  deleteCarriers(where: [CarrierWhereUniqueInput!]!): [Carrier]
+  createPackaging(data: PackagingCreateInput!): Packaging
+  createPackagings(data: [PackagingCreateInput!]!): [Packaging]
+  updatePackaging(where: PackagingWhereUniqueInput!, data: PackagingUpdateInput!): Packaging
+  updatePackagings(data: [PackagingUpdateArgs!]!): [Packaging]
+  deletePackaging(where: PackagingWhereUniqueInput!): Packaging
+  deletePackagings(where: [PackagingWhereUniqueInput!]!): [Packaging]
+  createWarehouseLocation(data: WarehouseLocationCreateInput!): WarehouseLocation
+  createWarehouseLocations(data: [WarehouseLocationCreateInput!]!): [WarehouseLocation]
+  updateWarehouseLocation(where: WarehouseLocationWhereUniqueInput!, data: WarehouseLocationUpdateInput!): WarehouseLocation
+  updateWarehouseLocations(data: [WarehouseLocationUpdateArgs!]!): [WarehouseLocation]
+  deleteWarehouseLocation(where: WarehouseLocationWhereUniqueInput!): WarehouseLocation
+  deleteWarehouseLocations(where: [WarehouseLocationWhereUniqueInput!]!): [WarehouseLocation]
+  createWarehouseSection(data: WarehouseSectionCreateInput!): WarehouseSection
+  createWarehouseSections(data: [WarehouseSectionCreateInput!]!): [WarehouseSection]
+  updateWarehouseSection(where: WarehouseSectionWhereUniqueInput!, data: WarehouseSectionUpdateInput!): WarehouseSection
+  updateWarehouseSections(data: [WarehouseSectionUpdateArgs!]!): [WarehouseSection]
+  deleteWarehouseSection(where: WarehouseSectionWhereUniqueInput!): WarehouseSection
+  deleteWarehouseSections(where: [WarehouseSectionWhereUniqueInput!]!): [WarehouseSection]
+  createInventoryTransfer(data: InventoryTransferCreateInput!): InventoryTransfer
+  createInventoryTransfers(data: [InventoryTransferCreateInput!]!): [InventoryTransfer]
+  updateInventoryTransfer(where: InventoryTransferWhereUniqueInput!, data: InventoryTransferUpdateInput!): InventoryTransfer
+  updateInventoryTransfers(data: [InventoryTransferUpdateArgs!]!): [InventoryTransfer]
+  deleteInventoryTransfer(where: InventoryTransferWhereUniqueInput!): InventoryTransfer
+  deleteInventoryTransfers(where: [InventoryTransferWhereUniqueInput!]!): [InventoryTransfer]
+  createRetailLocation(data: RetailLocationCreateInput!): RetailLocation
+  createRetailLocations(data: [RetailLocationCreateInput!]!): [RetailLocation]
+  updateRetailLocation(where: RetailLocationWhereUniqueInput!, data: RetailLocationUpdateInput!): RetailLocation
+  updateRetailLocations(data: [RetailLocationUpdateArgs!]!): [RetailLocation]
+  deleteRetailLocation(where: RetailLocationWhereUniqueInput!): RetailLocation
+  deleteRetailLocations(where: [RetailLocationWhereUniqueInput!]!): [RetailLocation]
+  createPOSTerminal(data: POSTerminalCreateInput!): POSTerminal
+  createPOSTerminals(data: [POSTerminalCreateInput!]!): [POSTerminal]
+  updatePOSTerminal(where: POSTerminalWhereUniqueInput!, data: POSTerminalUpdateInput!): POSTerminal
+  updatePOSTerminals(data: [POSTerminalUpdateArgs!]!): [POSTerminal]
+  deletePOSTerminal(where: POSTerminalWhereUniqueInput!): POSTerminal
+  deletePOSTerminals(where: [POSTerminalWhereUniqueInput!]!): [POSTerminal]
+  createPromotion(data: PromotionCreateInput!): Promotion
+  createPromotions(data: [PromotionCreateInput!]!): [Promotion]
+  updatePromotion(where: PromotionWhereUniqueInput!, data: PromotionUpdateInput!): Promotion
+  updatePromotions(data: [PromotionUpdateArgs!]!): [Promotion]
+  deletePromotion(where: PromotionWhereUniqueInput!): Promotion
+  deletePromotions(where: [PromotionWhereUniqueInput!]!): [Promotion]
+  createSupplier(data: SupplierCreateInput!): Supplier
+  createSuppliers(data: [SupplierCreateInput!]!): [Supplier]
+  updateSupplier(where: SupplierWhereUniqueInput!, data: SupplierUpdateInput!): Supplier
+  updateSuppliers(data: [SupplierUpdateArgs!]!): [Supplier]
+  deleteSupplier(where: SupplierWhereUniqueInput!): Supplier
+  deleteSuppliers(where: [SupplierWhereUniqueInput!]!): [Supplier]
   createTag(data: TagCreateInput!): Tag
   createTags(data: [TagCreateInput!]!): [Tag]
   updateTag(where: TagWhereUniqueInput!, data: TagUpdateInput!): Tag
   updateTags(data: [TagUpdateArgs!]!): [Tag]
   deleteTag(where: TagWhereUniqueInput!): Tag
   deleteTags(where: [TagWhereUniqueInput!]!): [Tag]
-  createBOM(data: BOMCreateInput!): BOM
-  createBOMS(data: [BOMCreateInput!]!): [BOM]
-  updateBOM(where: BOMWhereUniqueInput!, data: BOMUpdateInput!): BOM
-  updateBOMS(data: [BOMUpdateArgs!]!): [BOM]
-  deleteBOM(where: BOMWhereUniqueInput!): BOM
-  deleteBOMS(where: [BOMWhereUniqueInput!]!): [BOM]
+  createCategory(data: CategoryCreateInput!): Category
+  createCategories(data: [CategoryCreateInput!]!): [Category]
+  updateCategory(where: CategoryWhereUniqueInput!, data: CategoryUpdateInput!): Category
+  updateCategories(data: [CategoryUpdateArgs!]!): [Category]
+  deleteCategory(where: CategoryWhereUniqueInput!): Category
+  deleteCategories(where: [CategoryWhereUniqueInput!]!): [Category]
+  createIntegration(data: IntegrationCreateInput!): Integration
+  createIntegrations(data: [IntegrationCreateInput!]!): [Integration]
+  updateIntegration(where: IntegrationWhereUniqueInput!, data: IntegrationUpdateInput!): Integration
+  updateIntegrations(data: [IntegrationUpdateArgs!]!): [Integration]
+  deleteIntegration(where: IntegrationWhereUniqueInput!): Integration
+  deleteIntegrations(where: [IntegrationWhereUniqueInput!]!): [Integration]
+  createIntegrationSyncLog(data: IntegrationSyncLogCreateInput!): IntegrationSyncLog
+  createIntegrationSyncLogs(data: [IntegrationSyncLogCreateInput!]!): [IntegrationSyncLog]
+  updateIntegrationSyncLog(where: IntegrationSyncLogWhereUniqueInput!, data: IntegrationSyncLogUpdateInput!): IntegrationSyncLog
+  updateIntegrationSyncLogs(data: [IntegrationSyncLogUpdateArgs!]!): [IntegrationSyncLog]
+  deleteIntegrationSyncLog(where: IntegrationSyncLogWhereUniqueInput!): IntegrationSyncLog
+  deleteIntegrationSyncLogs(where: [IntegrationSyncLogWhereUniqueInput!]!): [IntegrationSyncLog]
+  createReport(data: ReportCreateInput!): Report
+  createReports(data: [ReportCreateInput!]!): [Report]
+  updateReport(where: ReportWhereUniqueInput!, data: ReportUpdateInput!): Report
+  updateReports(data: [ReportUpdateArgs!]!): [Report]
+  deleteReport(where: ReportWhereUniqueInput!): Report
+  deleteReports(where: [ReportWhereUniqueInput!]!): [Report]
   endSession: Boolean!
   authenticateUserWithPassword(email: String!, password: String!): UserAuthenticationWithPasswordResult
   createInitialUser(data: CreateInitialUserInput!): UserAuthenticationWithPasswordSuccess!
@@ -1242,33 +3581,93 @@ type Query {
   user(where: UserWhereUniqueInput!): User
   users(where: UserWhereInput! = {}, orderBy: [UserOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UserWhereUniqueInput): [User!]
   usersCount(where: UserWhereInput! = {}): Int
-  cluster(where: ClusterWhereUniqueInput!): Cluster
-  clusters(where: ClusterWhereInput! = {}, orderBy: [ClusterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ClusterWhereUniqueInput): [Cluster!]
-  clustersCount(where: ClusterWhereInput! = {}): Int
-  list(where: ListWhereUniqueInput!): List
-  lists(where: ListWhereInput! = {}, orderBy: [ListOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ListWhereUniqueInput): [List!]
-  listsCount(where: ListWhereInput! = {}): Int
+  team(where: TeamWhereUniqueInput!): Team
+  teams(where: TeamWhereInput! = {}, orderBy: [TeamOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TeamWhereUniqueInput): [Team!]
+  teamsCount(where: TeamWhereInput! = {}): Int
   product(where: ProductWhereUniqueInput!): Product
   products(where: ProductWhereInput! = {}, orderBy: [ProductOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProductWhereUniqueInput): [Product!]
   productsCount(where: ProductWhereInput! = {}): Int
-  inventory(where: InventoryWhereUniqueInput!): Inventory
-  inventories(where: InventoryWhereInput! = {}, orderBy: [InventoryOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InventoryWhereUniqueInput): [Inventory!]
-  inventoriesCount(where: InventoryWhereInput! = {}): Int
-  invitation(where: InvitationWhereUniqueInput!): Invitation
-  invitations(where: InvitationWhereInput! = {}, orderBy: [InvitationOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InvitationWhereUniqueInput): [Invitation!]
-  invitationsCount(where: InvitationWhereInput! = {}): Int
+  productVariant(where: ProductVariantWhereUniqueInput!): ProductVariant
+  productVariants(where: ProductVariantWhereInput! = {}, orderBy: [ProductVariantOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProductVariantWhereUniqueInput): [ProductVariant!]
+  productVariantsCount(where: ProductVariantWhereInput! = {}): Int
+  productImage(where: ProductImageWhereUniqueInput!): ProductImage
+  productImages(where: ProductImageWhereInput! = {}, orderBy: [ProductImageOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ProductImageWhereUniqueInput): [ProductImage!]
+  productImagesCount(where: ProductImageWhereInput! = {}): Int
+  inventoryItem(where: InventoryItemWhereUniqueInput!): InventoryItem
+  inventoryItems(where: InventoryItemWhereInput! = {}, orderBy: [InventoryItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InventoryItemWhereUniqueInput): [InventoryItem!]
+  inventoryItemsCount(where: InventoryItemWhereInput! = {}): Int
+  inventoryAdjustment(where: InventoryAdjustmentWhereUniqueInput!): InventoryAdjustment
+  inventoryAdjustments(where: InventoryAdjustmentWhereInput! = {}, orderBy: [InventoryAdjustmentOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InventoryAdjustmentWhereUniqueInput): [InventoryAdjustment!]
+  inventoryAdjustmentsCount(where: InventoryAdjustmentWhereInput! = {}): Int
+  material(where: MaterialWhereUniqueInput!): Material
+  materials(where: MaterialWhereInput! = {}, orderBy: [MaterialOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: MaterialWhereUniqueInput): [Material!]
+  materialsCount(where: MaterialWhereInput! = {}): Int
+  materialInventory(where: MaterialInventoryWhereUniqueInput!): MaterialInventory
+  materialInventories(where: MaterialInventoryWhereInput! = {}, orderBy: [MaterialInventoryOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: MaterialInventoryWhereUniqueInput): [MaterialInventory!]
+  materialInventoriesCount(where: MaterialInventoryWhereInput! = {}): Int
+  materialAdjustment(where: MaterialAdjustmentWhereUniqueInput!): MaterialAdjustment
+  materialAdjustments(where: MaterialAdjustmentWhereInput! = {}, orderBy: [MaterialAdjustmentOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: MaterialAdjustmentWhereUniqueInput): [MaterialAdjustment!]
+  materialAdjustmentsCount(where: MaterialAdjustmentWhereInput! = {}): Int
+  billOfMaterial(where: BillOfMaterialWhereUniqueInput!): BillOfMaterial
+  billOfMaterials(where: BillOfMaterialWhereInput! = {}, orderBy: [BillOfMaterialOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: BillOfMaterialWhereUniqueInput): [BillOfMaterial!]
+  billOfMaterialsCount(where: BillOfMaterialWhereInput! = {}): Int
   order(where: OrderWhereUniqueInput!): Order
   orders(where: OrderWhereInput! = {}, orderBy: [OrderOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: OrderWhereUniqueInput): [Order!]
   ordersCount(where: OrderWhereInput! = {}): Int
-  integration(where: IntegrationWhereUniqueInput!): Integration
-  integrations(where: IntegrationWhereInput! = {}, orderBy: [IntegrationOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: IntegrationWhereUniqueInput): [Integration!]
-  integrationsCount(where: IntegrationWhereInput! = {}): Int
+  orderItem(where: OrderItemWhereUniqueInput!): OrderItem
+  orderItems(where: OrderItemWhereInput! = {}, orderBy: [OrderItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: OrderItemWhereUniqueInput): [OrderItem!]
+  orderItemsCount(where: OrderItemWhereInput! = {}): Int
+  customer(where: CustomerWhereUniqueInput!): Customer
+  customers(where: CustomerWhereInput! = {}, orderBy: [CustomerOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: CustomerWhereUniqueInput): [Customer!]
+  customersCount(where: CustomerWhereInput! = {}): Int
+  address(where: AddressWhereUniqueInput!): Address
+  addresses(where: AddressWhereInput! = {}, orderBy: [AddressOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: AddressWhereUniqueInput): [Address!]
+  addressesCount(where: AddressWhereInput! = {}): Int
+  shipment(where: ShipmentWhereUniqueInput!): Shipment
+  shipments(where: ShipmentWhereInput! = {}, orderBy: [ShipmentOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ShipmentWhereUniqueInput): [Shipment!]
+  shipmentsCount(where: ShipmentWhereInput! = {}): Int
+  carrier(where: CarrierWhereUniqueInput!): Carrier
+  carriers(where: CarrierWhereInput! = {}, orderBy: [CarrierOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: CarrierWhereUniqueInput): [Carrier!]
+  carriersCount(where: CarrierWhereInput! = {}): Int
+  packaging(where: PackagingWhereUniqueInput!): Packaging
+  packagings(where: PackagingWhereInput! = {}, orderBy: [PackagingOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PackagingWhereUniqueInput): [Packaging!]
+  packagingsCount(where: PackagingWhereInput! = {}): Int
+  warehouseLocation(where: WarehouseLocationWhereUniqueInput!): WarehouseLocation
+  warehouseLocations(where: WarehouseLocationWhereInput! = {}, orderBy: [WarehouseLocationOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: WarehouseLocationWhereUniqueInput): [WarehouseLocation!]
+  warehouseLocationsCount(where: WarehouseLocationWhereInput! = {}): Int
+  warehouseSection(where: WarehouseSectionWhereUniqueInput!): WarehouseSection
+  warehouseSections(where: WarehouseSectionWhereInput! = {}, orderBy: [WarehouseSectionOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: WarehouseSectionWhereUniqueInput): [WarehouseSection!]
+  warehouseSectionsCount(where: WarehouseSectionWhereInput! = {}): Int
+  inventoryTransfer(where: InventoryTransferWhereUniqueInput!): InventoryTransfer
+  inventoryTransfers(where: InventoryTransferWhereInput! = {}, orderBy: [InventoryTransferOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InventoryTransferWhereUniqueInput): [InventoryTransfer!]
+  inventoryTransfersCount(where: InventoryTransferWhereInput! = {}): Int
+  retailLocation(where: RetailLocationWhereUniqueInput!): RetailLocation
+  retailLocations(where: RetailLocationWhereInput! = {}, orderBy: [RetailLocationOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: RetailLocationWhereUniqueInput): [RetailLocation!]
+  retailLocationsCount(where: RetailLocationWhereInput! = {}): Int
+  pOSTerminal(where: POSTerminalWhereUniqueInput!): POSTerminal
+  pOSTerminals(where: POSTerminalWhereInput! = {}, orderBy: [POSTerminalOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: POSTerminalWhereUniqueInput): [POSTerminal!]
+  pOSTerminalsCount(where: POSTerminalWhereInput! = {}): Int
+  promotion(where: PromotionWhereUniqueInput!): Promotion
+  promotions(where: PromotionWhereInput! = {}, orderBy: [PromotionOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PromotionWhereUniqueInput): [Promotion!]
+  promotionsCount(where: PromotionWhereInput! = {}): Int
+  supplier(where: SupplierWhereUniqueInput!): Supplier
+  suppliers(where: SupplierWhereInput! = {}, orderBy: [SupplierOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SupplierWhereUniqueInput): [Supplier!]
+  suppliersCount(where: SupplierWhereInput! = {}): Int
   tag(where: TagWhereUniqueInput!): Tag
   tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
   tagsCount(where: TagWhereInput! = {}): Int
-  bOM(where: BOMWhereUniqueInput!): BOM
-  bOMS(where: BOMWhereInput! = {}, orderBy: [BOMOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: BOMWhereUniqueInput): [BOM!]
-  bOMSCount(where: BOMWhereInput! = {}): Int
+  category(where: CategoryWhereUniqueInput!): Category
+  categories(where: CategoryWhereInput! = {}, orderBy: [CategoryOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: CategoryWhereUniqueInput): [Category!]
+  categoriesCount(where: CategoryWhereInput! = {}): Int
+  integration(where: IntegrationWhereUniqueInput!): Integration
+  integrations(where: IntegrationWhereInput! = {}, orderBy: [IntegrationOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: IntegrationWhereUniqueInput): [Integration!]
+  integrationsCount(where: IntegrationWhereInput! = {}): Int
+  integrationSyncLog(where: IntegrationSyncLogWhereUniqueInput!): IntegrationSyncLog
+  integrationSyncLogs(where: IntegrationSyncLogWhereInput! = {}, orderBy: [IntegrationSyncLogOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: IntegrationSyncLogWhereUniqueInput): [IntegrationSyncLog!]
+  integrationSyncLogsCount(where: IntegrationSyncLogWhereInput! = {}): Int
+  report(where: ReportWhereUniqueInput!): Report
+  reports(where: ReportWhereInput! = {}, orderBy: [ReportOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ReportWhereUniqueInput): [Report!]
+  reportsCount(where: ReportWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
 }

@@ -12,185 +12,534 @@ generator client {
 }
 
 model User {
-  id                    String        @id @default(cuid())
-  firstName             String        @default("")
-  lastName              String        @default("")
-  phoneNumbers          String        @default("")
-  clerkId               String        @unique @default("")
-  email                 String        @unique @default("")
-  role                  String?       @default("USER")
-  password              String
-  permissions           String?       @default("ALL")
-  configuration         String?       @default("{}")
-  tags                  Tag[]         @relation("Tag_users")
-  updatedAt             DateTime?     @updatedAt
-  createdAt             DateTime?     @default(now())
-  from_Cluster_users    Cluster[]     @relation("Cluster_users")
-  from_List_users       List[]        @relation("List_users")
-  from_Product_users    Product[]     @relation("Product_users")
-  from_Inventory_users  Inventory[]   @relation("Inventory_users")
-  from_Invitation_user  Invitation[]  @relation("Invitation_user")
-  from_Order_users      Order[]       @relation("Order_users")
-  from_Integration_user Integration[] @relation("Integration_user")
-  from_BOM_users        BOM[]         @relation("BOM_users")
+  id                                   String                @id @default(cuid())
+  firstName                            String                @default("")
+  lastName                             String                @default("")
+  email                                String                @unique @default("")
+  password                             String
+  avatar                               String                @default("")
+  role                                 String?               @default("admin")
+  isActive                             Boolean               @default(true)
+  createdAt                            DateTime?             @default(now())
+  teams                                Team[]                @relation("Team_members")
+  managedTeams                         Team[]                @relation("Team_manager")
+  products                             Product[]             @relation("Product_createdBy")
+  materials                            Material[]            @relation("Material_createdBy")
+  orders                               Order[]               @relation("Order_createdBy")
+  retailLocations                      RetailLocation[]      @relation("RetailLocation_staff")
+  warehouseLocations                   WarehouseLocation[]   @relation("User_warehouseLocations")
+  from_InventoryAdjustment_performedBy InventoryAdjustment[] @relation("InventoryAdjustment_performedBy")
+  from_MaterialAdjustment_performedBy  MaterialAdjustment[]  @relation("MaterialAdjustment_performedBy")
+  from_InventoryTransfer_initiatedBy   InventoryTransfer[]   @relation("InventoryTransfer_initiatedBy")
+  from_RetailLocation_manager          RetailLocation[]      @relation("RetailLocation_manager")
+  from_Promotion_createdBy             Promotion[]           @relation("Promotion_createdBy")
+  from_Tag_createdBy                   Tag[]                 @relation("Tag_createdBy")
+  from_Report_createdBy                Report[]              @relation("Report_createdBy")
 }
 
-model Cluster {
-  id                       String       @id @default(cuid())
-  name                     String       @default("")
-  description              String       @default("")
-  users                    User[]       @relation("Cluster_users")
-  lists                    List[]       @relation("Cluster_lists")
-  createdAt                DateTime?    @default(now())
-  updatedAt                DateTime?    @updatedAt
-  from_List_clusters       List[]       @relation("List_clusters")
-  from_Invitation_clusters Invitation[] @relation("Invitation_clusters")
-}
+model Team {
+  id          String    @id @default(cuid())
+  name        String    @default("")
+  description String    @default("")
+  members     User[]    @relation("Team_members")
+  manager     User?     @relation("Team_manager", fields: [managerId], references: [id])
+  managerId   String?   @map("manager")
+  createdAt   DateTime? @default(now())
 
-model List {
-  id                    String       @id @default(cuid())
-  name                  String       @default("")
-  description           String       @default("")
-  tags                  Tag[]        @relation("List_tags")
-  clusters              Cluster[]    @relation("List_clusters")
-  users                 User[]       @relation("List_users")
-  products              Product[]    @relation("List_products")
-  items                 Inventory[]  @relation("List_items")
-  createdAt             DateTime?    @default(now())
-  updatedAt             DateTime?    @updatedAt
-  from_Cluster_lists    Cluster[]    @relation("Cluster_lists")
-  from_Invitation_lists Invitation[] @relation("Invitation_lists")
+  @@index([managerId])
 }
 
 model Product {
-  id                  String    @id @default(cuid())
-  name                String    @default("")
-  description         String    @default("")
-  category            String    @default("")
-  sku                 String    @default("")
-  barcode             String    @default("")
-  attributes          String?   @default("{}")
-  isComposite         Boolean   @default(false)
-  cost                Float?
-  price               Float?
-  taxRate             Float?    @default(0)
-  reorderLevel        Int?      @default(0)
-  unit                String    @default("pcs")
-  quantity            Int?      @default(0)
-  supplier            String    @default("")
-  leadTime            Int?
-  status              String?   @default("ACTIVE")
-  isHidden            Boolean   @default(false)
-  users               User[]    @relation("Product_users")
-  tags                Tag[]     @relation("Product_tags")
-  boms                BOM[]     @relation("BOM_composite")
-  createdAt           DateTime? @default(now())
-  updatedAt           DateTime? @updatedAt
-  from_List_products  List[]    @relation("List_products")
-  from_Order_products Order[]   @relation("Order_products")
+  id                                String           @id @default(cuid())
+  name                              String           @default("")
+  description                       String           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  sku                               String           @unique @default("")
+  barcode                           String           @unique @default("")
+  price                             Int
+  cost                              Int?             @default(0)
+  weight                            Float?
+  dimensions                        String?
+  status                            String           @default("draft")
+  inventoryItems                    InventoryItem[]  @relation("InventoryItem_product")
+  images                            ProductImage[]   @relation("ProductImage_product")
+  categories                        Category[]       @relation("Category_products")
+  tags                              Tag[]            @relation("Product_tags")
+  variants                          ProductVariant[] @relation("ProductVariant_parentProduct")
+  materials                         BillOfMaterial[] @relation("BillOfMaterial_product")
+  createdBy                         User?            @relation("Product_createdBy", fields: [createdById], references: [id])
+  createdById                       String?          @map("createdBy")
+  createdAt                         DateTime?        @default(now())
+  updatedAt                         DateTime?
+  orderItems                        OrderItem[]      @relation("OrderItem_product")
+  from_Promotion_applicableProducts Promotion[]      @relation("Promotion_applicableProducts")
+
+  @@index([createdById])
 }
 
-model Inventory {
-  id                   String    @id @default(cuid())
-  name                 String    @default("")
-  description          String    @default("")
-  batchNumber          String    @default("")
-  sku                  String    @unique @default("")
-  quantity             Int?      @default(0)
-  unit                 String    @default("pcs")
-  location             String    @default("")
-  expiryDate           DateTime?
-  receivedDate         DateTime? @default(now())
-  category             String    @default("")
-  attributes           String?   @default("{}")
-  purchasePrice        Float?
-  salePrice            Float?
-  price                Float?
-  cost                 Float?
-  status               String?   @default("IN_STOCK")
-  supplier             String    @default("")
-  isReserved           Boolean   @default(false)
-  isDamaged            Boolean   @default(false)
-  users                User[]    @relation("Inventory_users")
-  tags                 Tag[]     @relation("Inventory_tags")
-  bom                  BOM[]     @relation("BOM_component")
-  createdAt            DateTime? @default(now())
-  updatedAt            DateTime? @updatedAt
-  from_List_items      List[]    @relation("List_items")
-  from_Order_inventory Order[]   @relation("Order_inventory")
+model ProductVariant {
+  id              String          @id @default(cuid())
+  name            String          @default("")
+  sku             String          @unique @default("")
+  barcode         String          @unique @default("")
+  price           Int?            @default(0)
+  attributes      String?
+  parentProduct   Product?        @relation("ProductVariant_parentProduct", fields: [parentProductId], references: [id])
+  parentProductId String?         @map("parentProduct")
+  inventoryItems  InventoryItem[] @relation("InventoryItem_variant")
+  images          ProductImage[]  @relation("ProductImage_variant")
+  orderItems      OrderItem[]     @relation("OrderItem_variant")
+
+  @@index([parentProductId])
 }
 
-model Invitation {
-  id        String    @id @default(cuid())
-  email     String    @default("")
-  status    String?   @default("PENDING")
-  token     String    @unique @default("")
-  lists     List[]    @relation("Invitation_lists")
-  clusters  Cluster[] @relation("Invitation_clusters")
-  user      User?     @relation("Invitation_user", fields: [userId], references: [id])
-  userId    String?   @map("user")
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
+model ProductImage {
+  id        String          @id @default(cuid())
+  altText   String          @default("")
+  image     String          @default("")
+  product   Product?        @relation("ProductImage_product", fields: [productId], references: [id])
+  productId String?         @map("product")
+  variant   ProductVariant? @relation("ProductImage_variant", fields: [variantId], references: [id])
+  variantId String?         @map("variant")
+  isPrimary Boolean         @default(false)
 
-  @@index([userId])
+  @@index([productId])
+  @@index([variantId])
+}
+
+model InventoryItem {
+  id              String                @id @default(cuid())
+  product         Product?              @relation("InventoryItem_product", fields: [productId], references: [id])
+  productId       String?               @map("product")
+  variant         ProductVariant?       @relation("InventoryItem_variant", fields: [variantId], references: [id])
+  variantId       String?               @map("variant")
+  location        WarehouseLocation?    @relation("InventoryItem_location", fields: [locationId], references: [id])
+  locationId      String?               @map("location")
+  section         WarehouseSection?     @relation("InventoryItem_section", fields: [sectionId], references: [id])
+  sectionId       String?               @map("section")
+  quantity        Int                   @default(0)
+  minStockLevel   Int?                  @default(5)
+  maxStockLevel   Int?
+  reorderPoint    Int?
+  reorderQuantity Int?
+  lastStockCheck  DateTime?
+  adjustments     InventoryAdjustment[] @relation("InventoryAdjustment_inventoryItem")
+  transfers       InventoryTransfer[]   @relation("InventoryItem_transfers")
+
+  @@index([productId])
+  @@index([variantId])
+  @@index([locationId])
+  @@index([sectionId])
+}
+
+model InventoryAdjustment {
+  id               String         @id @default(cuid())
+  inventoryItem    InventoryItem? @relation("InventoryAdjustment_inventoryItem", fields: [inventoryItemId], references: [id])
+  inventoryItemId  String?        @map("inventoryItem")
+  adjustmentType   String
+  quantity         Int
+  previousQuantity Int?
+  newQuantity      Int?
+  reason           String         @default("")
+  notes            String         @default("")
+  performedBy      User?          @relation("InventoryAdjustment_performedBy", fields: [performedById], references: [id])
+  performedById    String?        @map("performedBy")
+  timestamp        DateTime?      @default(now())
+
+  @@index([inventoryItemId])
+  @@index([performedById])
+}
+
+model Material {
+  id          String              @id @default(cuid())
+  name        String              @default("")
+  description String              @default("")
+  sku         String              @unique @default("")
+  unit        String              @default("")
+  unitCost    Int?                @default(0)
+  supplier    Supplier?           @relation("Material_supplier", fields: [supplierId], references: [id])
+  supplierId  String?             @map("supplier")
+  category    Category?           @relation("Material_category", fields: [categoryId], references: [id])
+  categoryId  String?             @map("category")
+  tags        Tag[]               @relation("Material_tags")
+  inventory   MaterialInventory[] @relation("MaterialInventory_material")
+  usedIn      BillOfMaterial[]    @relation("BillOfMaterial_material")
+  createdBy   User?               @relation("Material_createdBy", fields: [createdById], references: [id])
+  createdById String?             @map("createdBy")
+  createdAt   DateTime?           @default(now())
+  updatedAt   DateTime?
+
+  @@index([supplierId])
+  @@index([categoryId])
+  @@index([createdById])
+}
+
+model MaterialInventory {
+  id              String               @id @default(cuid())
+  material        Material?            @relation("MaterialInventory_material", fields: [materialId], references: [id])
+  materialId      String?              @map("material")
+  location        WarehouseLocation?   @relation("MaterialInventory_location", fields: [locationId], references: [id])
+  locationId      String?              @map("location")
+  section         WarehouseSection?    @relation("MaterialInventory_section", fields: [sectionId], references: [id])
+  sectionId       String?              @map("section")
+  quantity        Float                @default(0)
+  minStockLevel   Float?               @default(5)
+  reorderPoint    Float?
+  reorderQuantity Float?
+  lastStockCheck  DateTime?
+  adjustments     MaterialAdjustment[] @relation("MaterialAdjustment_materialInventory")
+
+  @@index([materialId])
+  @@index([locationId])
+  @@index([sectionId])
+}
+
+model MaterialAdjustment {
+  id                  String             @id @default(cuid())
+  materialInventory   MaterialInventory? @relation("MaterialAdjustment_materialInventory", fields: [materialInventoryId], references: [id])
+  materialInventoryId String?            @map("materialInventory")
+  adjustmentType      String
+  quantity            Float
+  previousQuantity    Float?
+  newQuantity         Float?
+  reason              String             @default("")
+  notes               String             @default("")
+  performedBy         User?              @relation("MaterialAdjustment_performedBy", fields: [performedById], references: [id])
+  performedById       String?            @map("performedBy")
+  timestamp           DateTime?          @default(now())
+
+  @@index([materialInventoryId])
+  @@index([performedById])
+}
+
+model BillOfMaterial {
+  id             String    @id @default(cuid())
+  product        Product?  @relation("BillOfMaterial_product", fields: [productId], references: [id])
+  productId      String?   @map("product")
+  material       Material? @relation("BillOfMaterial_material", fields: [materialId], references: [id])
+  materialId     String?   @map("material")
+  quantity       Float
+  wastagePercent Float?    @default(0)
+  notes          String    @default("")
+
+  @@index([productId])
+  @@index([materialId])
 }
 
 model Order {
-  id          String      @id @default(cuid())
-  orderNumber String      @default("")
-  status      String?     @default("PENDING")
-  users       User[]      @relation("Order_users")
-  products    Product[]   @relation("Order_products")
-  inventory   Inventory[] @relation("Order_inventory")
-  source      String      @default("")
-  quantity    Int?        @default(0)
-  price       Int?        @default(0)
-  taxRate     Int?        @default(0)
-  unit        String      @default("pcs")
-  currency    String      @default("")
-  createdAt   DateTime?   @default(now())
-  updatedAt   DateTime?   @updatedAt
+  id                String          @id @default(cuid())
+  orderNumber       String          @unique @default("")
+  customer          Customer?       @relation("Order_customer", fields: [customerId], references: [id])
+  customerId        String?         @map("customer")
+  orderDate         DateTime?       @default(now())
+  status            String          @default("draft")
+  paymentStatus     String          @default("pending")
+  source            String          @default("manual")
+  sourceId          String          @default("")
+  items             OrderItem[]     @relation("OrderItem_order")
+  subtotal          Int?            @default(0)
+  taxAmount         Int?            @default(0)
+  shippingAmount    Int?            @default(0)
+  discountAmount    Int?            @default(0)
+  totalAmount       Int?            @default(0)
+  notes             String          @default("")
+  shippingAddress   Address?        @relation("Order_shippingAddress", fields: [shippingAddressId], references: [id])
+  shippingAddressId String?         @map("shippingAddress")
+  billingAddress    Address?        @relation("Order_billingAddress", fields: [billingAddressId], references: [id])
+  billingAddressId  String?         @map("billingAddress")
+  shipment          Shipment?       @relation("Order_shipment", fields: [shipmentId], references: [id])
+  shipmentId        String?         @unique @map("shipment")
+  createdBy         User?           @relation("Order_createdBy", fields: [createdById], references: [id])
+  createdById       String?         @map("createdBy")
+  retailLocation    RetailLocation? @relation("Order_retailLocation", fields: [retailLocationId], references: [id])
+  retailLocationId  String?         @map("retailLocation")
+  tags              Tag[]           @relation("Order_tags")
+
+  @@index([customerId])
+  @@index([shippingAddressId])
+  @@index([billingAddressId])
+  @@index([createdById])
+  @@index([retailLocationId])
 }
 
-model Integration {
-  id              String    @id @default(cuid())
-  user            User?     @relation("Integration_user", fields: [userId], references: [id])
-  userId          String?   @map("user")
-  integrationType String    @default("")
-  storeUrl        String    @default("")
-  apiKey          String    @default("")
-  shopId          String    @default("")
-  status          String?   @default("PENDING")
-  createdAt       DateTime? @default(now())
-  updatedAt       DateTime? @updatedAt
+model OrderItem {
+  id        String          @id @default(cuid())
+  order     Order?          @relation("OrderItem_order", fields: [orderId], references: [id])
+  orderId   String?         @map("order")
+  product   Product?        @relation("OrderItem_product", fields: [productId], references: [id])
+  productId String?         @map("product")
+  variant   ProductVariant? @relation("OrderItem_variant", fields: [variantId], references: [id])
+  variantId String?         @map("variant")
+  quantity  Int             @default(1)
+  unitPrice Int
+  discount  Int?            @default(0)
+  tax       Int?            @default(0)
+  total     Int?            @default(0)
+  fulfilled Int?            @default(0)
+  notes     String          @default("")
 
-  @@index([userId])
+  @@index([orderId])
+  @@index([productId])
+  @@index([variantId])
+}
+
+model Customer {
+  id        String    @id @default(cuid())
+  firstName String    @default("")
+  lastName  String    @default("")
+  email     String    @unique @default("")
+  phone     String    @default("")
+  company   String    @default("")
+  taxId     String    @default("")
+  notes     String    @default("")
+  addresses Address[] @relation("Address_customer")
+  orders    Order[]   @relation("Order_customer")
+  tags      Tag[]     @relation("Customer_tags")
+  createdAt DateTime? @default(now())
+}
+
+model Address {
+  id             String    @id @default(cuid())
+  addressLine1   String    @default("")
+  addressLine2   String    @default("")
+  city           String    @default("")
+  state          String    @default("")
+  postalCode     String    @default("")
+  country        String    @default("")
+  isDefault      Boolean   @default(false)
+  addressType    String?   @default("both")
+  customer       Customer? @relation("Address_customer", fields: [customerId], references: [id])
+  customerId     String?   @map("customer")
+  shippingOrders Order[]   @relation("Order_shippingAddress")
+  billingOrders  Order[]   @relation("Order_billingAddress")
+
+  @@index([customerId])
+}
+
+model Shipment {
+  id             String     @id @default(cuid())
+  shipmentId     String     @unique @default("")
+  order          Order?     @relation("Order_shipment")
+  carrier        Carrier?   @relation("Shipment_carrier", fields: [carrierId], references: [id])
+  carrierId      String?    @map("carrier")
+  trackingNumber String     @default("")
+  status         String     @default("processing")
+  shippedDate    DateTime?
+  deliveredDate  DateTime?
+  packaging      Packaging? @relation("Shipment_packaging", fields: [packagingId], references: [id])
+  packagingId    String?    @map("packaging")
+  weight         Float?
+  dimensions     String?
+  shippingCost   Int?       @default(0)
+  notes          String     @default("")
+  createdAt      DateTime?  @default(now())
+  updatedAt      DateTime?
+
+  @@index([carrierId])
+  @@index([packagingId])
+}
+
+model Carrier {
+  id                  String     @id @default(cuid())
+  name                String     @default("")
+  accountNumber       String     @default("")
+  isActive            Boolean    @default(true)
+  trackingUrlTemplate String     @default("")
+  rateType            String?
+  shipments           Shipment[] @relation("Shipment_carrier")
+  settings            String?
+}
+
+model Packaging {
+  id         String     @id @default(cuid())
+  name       String     @default("")
+  dimensions String     @default("")
+  weight     Float?
+  isActive   Boolean    @default(true)
+  shipments  Shipment[] @relation("Shipment_packaging")
+}
+
+model WarehouseLocation {
+  id                String              @id @default(cuid())
+  name              String              @default("")
+  address           String              @default("")
+  status            String?             @default("active")
+  sections          WarehouseSection[]  @relation("WarehouseSection_warehouse")
+  inventory         InventoryItem[]     @relation("InventoryItem_location")
+  materialInventory MaterialInventory[] @relation("MaterialInventory_location")
+  staff             User[]              @relation("User_warehouseLocations")
+  outgoingTransfers InventoryTransfer[] @relation("InventoryTransfer_fromLocation")
+  incomingTransfers InventoryTransfer[] @relation("InventoryTransfer_toLocation")
+}
+
+model WarehouseSection {
+  id                String              @id @default(cuid())
+  name              String              @default("")
+  warehouse         WarehouseLocation?  @relation("WarehouseSection_warehouse", fields: [warehouseId], references: [id])
+  warehouseId       String?             @map("warehouse")
+  type              String?
+  capacity          Int?
+  inventory         InventoryItem[]     @relation("InventoryItem_section")
+  materialInventory MaterialInventory[] @relation("MaterialInventory_section")
+
+  @@index([warehouseId])
+}
+
+model InventoryTransfer {
+  id             String             @id @default(cuid())
+  transferId     String             @unique @default("")
+  fromLocation   WarehouseLocation? @relation("InventoryTransfer_fromLocation", fields: [fromLocationId], references: [id])
+  fromLocationId String?            @map("fromLocation")
+  toLocation     WarehouseLocation? @relation("InventoryTransfer_toLocation", fields: [toLocationId], references: [id])
+  toLocationId   String?            @map("toLocation")
+  items          InventoryItem[]    @relation("InventoryItem_transfers")
+  status         String?            @default("pending")
+  initiatedBy    User?              @relation("InventoryTransfer_initiatedBy", fields: [initiatedById], references: [id])
+  initiatedById  String?            @map("initiatedBy")
+  initiatedDate  DateTime?          @default(now())
+  completedDate  DateTime?
+  notes          String             @default("")
+
+  @@index([fromLocationId])
+  @@index([toLocationId])
+  @@index([initiatedById])
+}
+
+model RetailLocation {
+  id           String        @id @default(cuid())
+  name         String        @default("")
+  address      String        @default("")
+  manager      User?         @relation("RetailLocation_manager", fields: [managerId], references: [id])
+  managerId    String?       @map("manager")
+  status       String?       @default("active")
+  staff        User[]        @relation("RetailLocation_staff")
+  orders       Order[]       @relation("Order_retailLocation")
+  posTerminals POSTerminal[] @relation("POSTerminal_location")
+
+  @@index([managerId])
+}
+
+model POSTerminal {
+  id         String          @id @default(cuid())
+  terminalId String          @unique @default("")
+  location   RetailLocation? @relation("POSTerminal_location", fields: [locationId], references: [id])
+  locationId String?         @map("location")
+  status     String?         @default("connected")
+  lastSync   DateTime?
+  settings   String?
+
+  @@index([locationId])
+}
+
+model Promotion {
+  id                   String     @id @default(cuid())
+  name                 String     @default("")
+  description          String     @default("")
+  discountType         String
+  discountValue        Int?       @default(0)
+  discountCode         String     @default("")
+  startDate            DateTime
+  endDate              DateTime
+  status               String?
+  minimumPurchase      Int?       @default(0)
+  usageLimit           Int?
+  usageCount           Int?       @default(0)
+  applicableProducts   Product[]  @relation("Promotion_applicableProducts")
+  applicableCategories Category[] @relation("Promotion_applicableCategories")
+  createdBy            User?      @relation("Promotion_createdBy", fields: [createdById], references: [id])
+  createdById          String?    @map("createdBy")
+  createdAt            DateTime?  @default(now())
+
+  @@index([createdById])
+}
+
+model Supplier {
+  id          String     @id @default(cuid())
+  name        String     @default("")
+  contactName String     @default("")
+  email       String     @default("")
+  phone       String     @default("")
+  website     String     @default("")
+  address     String     @default("")
+  notes       String     @default("")
+  materials   Material[] @relation("Material_supplier")
+  isActive    Boolean    @default(true)
+  createdAt   DateTime?  @default(now())
 }
 
 model Tag {
-  id          String      @id @default(cuid())
-  name        String      @default("")
-  description String      @default("")
-  users       User[]      @relation("Tag_users")
-  lists       List[]      @relation("List_tags")
-  products    Product[]   @relation("Product_tags")
-  inventory   Inventory[] @relation("Inventory_tags")
-}
-
-model BOM {
   id          String     @id @default(cuid())
-  name        String     @default("")
-  description String     @default("")
-  composite   Product?   @relation("BOM_composite", fields: [compositeId], references: [id])
-  compositeId String?    @map("composite")
-  component   Inventory? @relation("BOM_component", fields: [componentId], references: [id])
-  componentId String?    @map("component")
-  users       User[]     @relation("BOM_users")
-  quantity    Int        @default(1)
-  unit        String     @default("pcs")
-  updatedAt   DateTime?  @updatedAt
+  name        String     @unique @default("")
+  color       String     @default("")
+  products    Product[]  @relation("Product_tags")
+  materials   Material[] @relation("Material_tags")
+  customers   Customer[] @relation("Customer_tags")
+  orders      Order[]    @relation("Order_tags")
+  createdBy   User?      @relation("Tag_createdBy", fields: [createdById], references: [id])
+  createdById String?    @map("createdBy")
   createdAt   DateTime?  @default(now())
 
-  @@index([compositeId])
-  @@index([componentId])
+  @@index([createdById])
+}
+
+model Category {
+  id                                  String      @id @default(cuid())
+  name                                String      @default("")
+  slug                                String      @unique @default("")
+  description                         String      @default("")
+  parent                              Category?   @relation("Category_parent", fields: [parentId], references: [id])
+  parentId                            String?     @map("parent")
+  children                            Category[]  @relation("Category_parent")
+  products                            Product[]   @relation("Category_products")
+  materials                           Material[]  @relation("Material_category")
+  image                               String      @default("")
+  isActive                            Boolean     @default(true)
+  from_Promotion_applicableCategories Promotion[] @relation("Promotion_applicableCategories")
+
+  @@index([parentId])
+}
+
+model Integration {
+  id          String               @id @default(cuid())
+  name        String               @default("")
+  type        String
+  isActive    Boolean              @default(true)
+  credentials String?
+  settings    String?
+  lastSync    DateTime?
+  syncLogs    IntegrationSyncLog[] @relation("IntegrationSyncLog_integration")
+  createdAt   DateTime?            @default(now())
+  updatedAt   DateTime?
+}
+
+model IntegrationSyncLog {
+  id             String       @id @default(cuid())
+  integration    Integration? @relation("IntegrationSyncLog_integration", fields: [integrationId], references: [id])
+  integrationId  String?      @map("integration")
+  syncType       String
+  status         String
+  startTime      DateTime?    @default(now())
+  endTime        DateTime?
+  itemsProcessed Int?         @default(0)
+  itemsSucceeded Int?         @default(0)
+  itemsFailed    Int?         @default(0)
+  errors         String?
+  details        String?
+
+  @@index([integrationId])
+}
+
+model Report {
+  id          String    @id @default(cuid())
+  name        String    @default("")
+  description String    @default("")
+  type        String
+  parameters  String?
+  schedule    String?
+  lastRun     DateTime?
+  createdBy   User?     @relation("Report_createdBy", fields: [createdById], references: [id])
+  createdById String?   @map("createdBy")
+  createdAt   DateTime? @default(now())
+  isPro       Boolean   @default(false)
+
+  @@index([createdById])
 }
