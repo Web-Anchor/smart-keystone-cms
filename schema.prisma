@@ -28,6 +28,21 @@ model User {
   orders                               Order[]               @relation("Order_createdBy")
   retailLocations                      RetailLocation[]      @relation("RetailLocation_staff")
   warehouseLocations                   WarehouseLocation[]   @relation("User_warehouseLocations")
+  stripeCustomerId                     String                @unique @default("")
+  stripeSubscriptionId                 String                @unique @default("")
+  stripePriceId                        String                @default("")
+  subscriptionPlan                     String?               @default("free")
+  subscriptionStatus                   String?               @default("active")
+  subscriptionPeriodStart              DateTime?
+  subscriptionPeriodEnd                DateTime?
+  subscriptionCancelAtPeriodEnd        Boolean               @default(false)
+  billingCycle                         String?
+  paymentMethodId                      String                @default("")
+  paymentMethodType                    String                @default("")
+  paymentMethodLast4                   String                @default("")
+  paymentMethodExpMonth                Int?
+  paymentMethodExpYear                 Int?
+  subscriptionMetadata                 String?
   from_InventoryAdjustment_performedBy InventoryAdjustment[] @relation("InventoryAdjustment_performedBy")
   from_MaterialAdjustment_performedBy  MaterialAdjustment[]  @relation("MaterialAdjustment_performedBy")
   from_InventoryTransfer_initiatedBy   InventoryTransfer[]   @relation("InventoryTransfer_initiatedBy")

@@ -25,6 +25,21 @@ type User {
   retailLocationsCount(where: RetailLocationWhereInput! = {}): Int
   warehouseLocations(where: WarehouseLocationWhereInput! = {}, orderBy: [WarehouseLocationOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: WarehouseLocationWhereUniqueInput): [WarehouseLocation!]
   warehouseLocationsCount(where: WarehouseLocationWhereInput! = {}): Int
+  stripeCustomerId: String
+  stripeSubscriptionId: String
+  stripePriceId: String
+  subscriptionPlan: String
+  subscriptionStatus: String
+  subscriptionPeriodStart: DateTime
+  subscriptionPeriodEnd: DateTime
+  subscriptionCancelAtPeriodEnd: Boolean
+  billingCycle: String
+  paymentMethodId: String
+  paymentMethodType: String
+  paymentMethodLast4: String
+  paymentMethodExpMonth: Int
+  paymentMethodExpYear: Int
+  subscriptionMetadata: JSON
 }
 
 type PasswordState {
@@ -36,6 +51,8 @@ scalar DateTime @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339
 input UserWhereUniqueInput {
   id: ID
   email: String
+  stripeCustomerId: String
+  stripeSubscriptionId: String
 }
 
 input UserWhereInput {
@@ -57,6 +74,20 @@ input UserWhereInput {
   orders: OrderManyRelationFilter
   retailLocations: RetailLocationManyRelationFilter
   warehouseLocations: WarehouseLocationManyRelationFilter
+  stripeCustomerId: StringFilter
+  stripeSubscriptionId: StringFilter
+  stripePriceId: StringFilter
+  subscriptionPlan: StringNullableFilter
+  subscriptionStatus: StringNullableFilter
+  subscriptionPeriodStart: DateTimeNullableFilter
+  subscriptionPeriodEnd: DateTimeNullableFilter
+  subscriptionCancelAtPeriodEnd: BooleanFilter
+  billingCycle: StringNullableFilter
+  paymentMethodId: StringFilter
+  paymentMethodType: StringFilter
+  paymentMethodLast4: StringFilter
+  paymentMethodExpMonth: IntNullableFilter
+  paymentMethodExpYear: IntNullableFilter
 }
 
 input IDFilter {
@@ -164,6 +195,17 @@ input WarehouseLocationManyRelationFilter {
   none: WarehouseLocationWhereInput
 }
 
+input IntNullableFilter {
+  equals: Int
+  in: [Int!]
+  notIn: [Int!]
+  lt: Int
+  lte: Int
+  gt: Int
+  gte: Int
+  not: IntNullableFilter
+}
+
 input UserOrderByInput {
   id: OrderDirection
   firstName: OrderDirection
@@ -173,6 +215,20 @@ input UserOrderByInput {
   role: OrderDirection
   isActive: OrderDirection
   createdAt: OrderDirection
+  stripeCustomerId: OrderDirection
+  stripeSubscriptionId: OrderDirection
+  stripePriceId: OrderDirection
+  subscriptionPlan: OrderDirection
+  subscriptionStatus: OrderDirection
+  subscriptionPeriodStart: OrderDirection
+  subscriptionPeriodEnd: OrderDirection
+  subscriptionCancelAtPeriodEnd: OrderDirection
+  billingCycle: OrderDirection
+  paymentMethodId: OrderDirection
+  paymentMethodType: OrderDirection
+  paymentMethodLast4: OrderDirection
+  paymentMethodExpMonth: OrderDirection
+  paymentMethodExpYear: OrderDirection
 }
 
 enum OrderDirection {
@@ -196,6 +252,21 @@ input UserUpdateInput {
   orders: OrderRelateToManyForUpdateInput
   retailLocations: RetailLocationRelateToManyForUpdateInput
   warehouseLocations: WarehouseLocationRelateToManyForUpdateInput
+  stripeCustomerId: String
+  stripeSubscriptionId: String
+  stripePriceId: String
+  subscriptionPlan: String
+  subscriptionStatus: String
+  subscriptionPeriodStart: DateTime
+  subscriptionPeriodEnd: DateTime
+  subscriptionCancelAtPeriodEnd: Boolean
+  billingCycle: String
+  paymentMethodId: String
+  paymentMethodType: String
+  paymentMethodLast4: String
+  paymentMethodExpMonth: Int
+  paymentMethodExpYear: Int
+  subscriptionMetadata: JSON
 }
 
 input TeamRelateToManyForUpdateInput {
@@ -261,6 +332,21 @@ input UserCreateInput {
   orders: OrderRelateToManyForCreateInput
   retailLocations: RetailLocationRelateToManyForCreateInput
   warehouseLocations: WarehouseLocationRelateToManyForCreateInput
+  stripeCustomerId: String
+  stripeSubscriptionId: String
+  stripePriceId: String
+  subscriptionPlan: String
+  subscriptionStatus: String
+  subscriptionPeriodStart: DateTime
+  subscriptionPeriodEnd: DateTime
+  subscriptionCancelAtPeriodEnd: Boolean
+  billingCycle: String
+  paymentMethodId: String
+  paymentMethodType: String
+  paymentMethodLast4: String
+  paymentMethodExpMonth: Int
+  paymentMethodExpYear: Int
+  subscriptionMetadata: JSON
 }
 
 input TeamRelateToManyForCreateInput {
@@ -455,17 +541,6 @@ input IntFilter {
   gt: Int
   gte: Int
   not: IntFilter
-}
-
-input IntNullableFilter {
-  equals: Int
-  in: [Int!]
-  notIn: [Int!]
-  lt: Int
-  lte: Int
-  gt: Int
-  gte: Int
-  not: IntNullableFilter
 }
 
 input FloatNullableFilter {
