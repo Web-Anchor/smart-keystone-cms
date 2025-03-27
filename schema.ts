@@ -50,8 +50,8 @@ export const lists = {
         many: true,
       }),
       // Stripe Subscription Fields
-      stripeCustomerId: text({ isIndexed: 'unique' }),
-      stripeSubscriptionId: text({ isIndexed: 'unique' }),
+      stripeCustomerId: text({ isIndexed: 'unique', defaultValue: null }),
+      stripeSubscriptionId: text({ isIndexed: 'unique', defaultValue: null }),
       stripePriceId: text(),
       subscriptionPlan: select({
         options: [
@@ -119,7 +119,7 @@ export const lists = {
         dividers: true,
       }),
       sku: text({ validation: { isRequired: true }, isIndexed: 'unique' }),
-      barcode: text({ isIndexed: 'unique' }),
+      barcode: text({ isIndexed: 'unique', defaultValue: null }),
       price: integer({ validation: { isRequired: true } }),
       cost: integer({ defaultValue: 0 }),
       weight: float(),
@@ -160,7 +160,7 @@ export const lists = {
     fields: {
       name: text({ validation: { isRequired: true } }),
       sku: text({ validation: { isRequired: true }, isIndexed: 'unique' }),
-      barcode: text({ isIndexed: 'unique' }),
+      barcode: text({ isIndexed: 'unique', defaultValue: null }),
       price: integer({ defaultValue: 0 }),
       attributes: json(), // e.g., { color: 'red', size: 'medium' }
       parentProduct: relationship({ ref: 'Product.variants' }),
@@ -420,7 +420,7 @@ export const lists = {
     fields: {
       firstName: text({ validation: { isRequired: true } }),
       lastName: text({ validation: { isRequired: true } }),
-      email: text({ isIndexed: 'unique' }),
+      email: text({ isIndexed: 'unique', defaultValue: null }),
       phone: text(),
       company: text(),
       taxId: text(),
