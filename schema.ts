@@ -19,7 +19,7 @@ export const lists = {
     access: allowAll,
     fields: {
       firstName: text({ validation: { isRequired: true } }),
-      lastName: text({ validation: { isRequired: true } }),
+      lastName: text(),
       email: text({ validation: { isRequired: true }, isIndexed: 'unique' }),
       password: password({ validation: { isRequired: true } }),
       avatar: text(),
